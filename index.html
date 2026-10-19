@@ -93,7 +93,7 @@
       z-index: 2;
     }
 
-    /* ZENTRUM: Logo mit sanftem Aura-Glow */
+    /* ZENTRUM: Perfekt zentriertes Logo mit Aura-Glow */
     .center-node {
       position: absolute;
       display: flex;
@@ -107,8 +107,8 @@
 
     .logo-wrapper {
       position: relative;
-      width: 170px;
-      height: 170px;
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
       background: #080d16;
       display: flex;
@@ -116,7 +116,7 @@
       justify-content: center;
       box-shadow: 0 0 45px rgba(0, 242, 254, 0.4), 0 0 85px rgba(0, 230, 118, 0.2);
       animation: pulse-aura 3.5s infinite ease-in-out;
-      border: 2px solid rgba(0, 242, 254, 0.4);
+      border: 2px solid rgba(0, 242, 254, 0.45);
       overflow: hidden;
     }
 
@@ -130,26 +130,29 @@
     }
 
     .logo-img {
-      width: 120px;
-      height: 120px;
+      width: 130px;
+      height: 130px;
       object-fit: contain;
     }
 
+    /* Exakter Textstil für CORUNEVA und Untertitel */
     .brand-title {
-      margin-top: 16px;
-      font-size: 26px;
+      margin-top: 18px;
+      font-size: 28px;
       font-weight: 800;
-      letter-spacing: 2.5px;
+      letter-spacing: 3px;
       color: #ffffff;
       text-transform: uppercase;
+      text-align: center;
     }
 
     .brand-subtitle {
-      margin-top: 4px;
+      margin-top: 6px;
       font-size: 13px;
       color: var(--text-muted);
       font-weight: 400;
       letter-spacing: 0.5px;
+      text-align: center;
     }
 
     /* Mind-Map Knotenpunkte */
@@ -256,11 +259,10 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- ZENTRUM: Logo & Beschriftung -->
+    <!-- ZENTRUM: Logo ohne Text im Bild + Text-Stil darunter -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
-        <!-- Falls du das reine C-Symbol ohne Text als Bild hast (empfohlen), lade es als Logo_C_Only.png hoch -->
-        <img class="logo-img" src="Logo_C_Only.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva_transparent.png';">
+        <img class="logo-img" src="Logo_Coruneva_ohne_Text.png" alt="CORUNEVA Logo" onerror="this.src='Logo_C_Only.png';">
       </div>
       <h1 class="brand-title">CORUNEVA</h1>
       <p class="brand-subtitle">Klicke und erfahre mehr</p>
@@ -351,6 +353,7 @@
       return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     }
 
+    /* Linien animieren vom Zentrum (Logo) zum jeweiligen Knotenpunkt */
     function createPath(parentId, childId) {
       const parent = document.getElementById(parentId);
       const child = document.getElementById(childId);
