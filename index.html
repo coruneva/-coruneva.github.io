@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CORUNEVA</title>
+  <title>CORUNEVA – Digitales Organisationsgedächtnis</title>
   <style>
     :root {
       --bg-color: #060a12;
@@ -93,7 +93,7 @@
       z-index: 2;
     }
 
-    /* Zentrum: Logo mit Aura-Glow */
+    /* ZENTRUM: Logo & Nebel-Aura im Code aufgebaut */
     .center-node {
       position: absolute;
       display: flex;
@@ -105,37 +105,91 @@
       user-select: none;
     }
 
+    .aura-container {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Nebel-/Plasma-Glow Schichten hinter dem Logo */
+    .aura-cloud-1 {
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 242, 254, 0.45) 0%, rgba(0, 230, 118, 0.25) 45%, rgba(6, 10, 18, 0) 70%);
+      filter: blur(18px);
+      animation: rotateCloud 12s linear infinite, pulseOpacity 4s ease-in-out infinite;
+    }
+
+    .aura-cloud-2 {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      background: radial-gradient(circle, rgba(0, 242, 254, 0.6) 10%, rgba(0, 230, 118, 0.35) 50%, rgba(0,0,0,0) 75%);
+      filter: blur(12px);
+      animation: rotateCloudReverse 8s linear infinite;
+    }
+
+    .aura-rays {
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: repeating-conic-gradient(
+        from 0deg,
+        rgba(0, 242, 254, 0.25) 0deg 15deg,
+        transparent 15deg 30deg,
+        rgba(0, 230, 118, 0.2) 30deg 45deg,
+        transparent 45deg 60deg
+      );
+      filter: blur(8px);
+      animation: rotateCloud 20s linear infinite;
+    }
+
+    @keyframes rotateCloud {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.06); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes rotateCloudReverse {
+      0% { transform: rotate(360deg) scale(1); }
+      50% { transform: rotate(180deg) scale(0.95); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+
+    @keyframes pulseOpacity {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
     .logo-wrapper {
       position: relative;
-      width: 150px;
-      height: 150px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
       background: #090e17;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 50px rgba(0, 242, 254, 0.35), 0 0 90px rgba(0, 230, 118, 0.2);
-      animation: pulse-aura 3.5s infinite ease-in-out;
-      border: 2px solid rgba(0, 242, 254, 0.4);
-    }
-
-    @keyframes pulse-aura {
-      0%, 100% {
-        box-shadow: 0 0 35px rgba(0, 242, 254, 0.3), 0 0 70px rgba(0, 230, 118, 0.15);
-      }
-      50% {
-        box-shadow: 0 0 65px rgba(0, 242, 254, 0.6), 0 0 110px rgba(0, 230, 118, 0.35);
-      }
+      z-index: 2;
+      border: 1px solid rgba(0, 242, 254, 0.5);
+      box-shadow: inset 0 0 20px rgba(0, 242, 254, 0.3);
     }
 
     .logo-img {
-      width: 110px;
-      height: 110px;
+      width: 100px;
+      height: 100px;
       object-fit: contain;
     }
 
     .brand-title {
-      margin-top: 16px;
+      margin-top: 14px;
       font-size: 26px;
       font-weight: 800;
       letter-spacing: 2.5px;
@@ -182,7 +236,7 @@
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
     }
 
-    /* In-Place Erweiterung der Infokarte direkt am Punkt */
+    /* In-Place Erweiterung der Infokarte */
     .node.expanded {
       max-width: 340px;
       border-color: var(--cyan-glow);
@@ -241,12 +295,10 @@
 </head>
 <body>
 
-  <!-- Barrierefreiheits-Navigation -->
   <nav class="a11y-nav" aria-label="Barrierefreiheit">
     <button class="a11y-btn" id="toggle-view-btn">Textansicht (Barrierefrei)</button>
   </nav>
 
-  <!-- SVG Canvas für Linien -->
   <svg id="svg-canvas">
     <defs>
       <linearGradient id="cyan-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -258,17 +310,22 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- Zentrum: Original-Logo & Titel -->
+    <!-- Zentrum: Nebel-Aura-Effekte & Logo -->
     <div class="center-node" id="center-node">
-      <div class="logo-wrapper">
-        <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo" onerror="this.style.display='none'; document.getElementById('fallback-svg-logo').style.display='block';">
-        <svg id="fallback-svg-logo" style="display:none;" width="85" height="85" viewBox="0 0 100 100" fill="none">
-          <path d="M 50 10 A 40 40 0 1 1 15 35" stroke="url(#cyan-green-grad)" stroke-width="10" stroke-linecap="round"/>
-          <circle cx="50" cy="35" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
-          <circle cx="32" cy="65" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
-          <circle cx="68" cy="65" r="9" fill="none" stroke="#00e676" stroke-width="5"/>
-          <path d="M 43 40 L 37 58 M 57 40 L 63 58 M 39 65 L 61 65" stroke="url(#cyan-green-grad)" stroke-width="4"/>
-        </svg>
+      <div class="aura-container">
+        <div class="aura-rays"></div>
+        <div class="aura-cloud-1"></div>
+        <div class="aura-cloud-2"></div>
+        <div class="logo-wrapper">
+          <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo" onerror="this.style.display='none'; document.getElementById('fallback-svg-logo').style.display='block';">
+          <svg id="fallback-svg-logo" style="display:none;" width="85" height="85" viewBox="0 0 100 100" fill="none">
+            <path d="M 50 10 A 40 40 0 1 1 15 35" stroke="url(#cyan-green-grad)" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="50" cy="35" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
+            <circle cx="32" cy="65" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
+            <circle cx="68" cy="65" r="9" fill="none" stroke="#00e676" stroke-width="5"/>
+            <path d="M 43 40 L 37 58 M 57 40 L 63 58 M 39 65 L 61 65" stroke="url(#cyan-green-grad)" stroke-width="4"/>
+          </svg>
+        </div>
       </div>
       <h1 class="brand-title">CORUNEVA</h1>
       <p class="brand-subtitle">Klicke und erfahre mehr</p>
@@ -305,7 +362,7 @@
       <div class="card-text">Flexibel auf Ihre Unternehmensgröße angepasst. Kontaktieren Sie uns für ein individuelles Angebot.</div>
     </div>
 
-    <!-- Unterpunkte (Getrennt) -->
+    <!-- Unterpunkte -->
     <div class="node subnode" id="node-vision" style="top: 15%; left: 15%;">
       <div class="label-text">Vision</div>
       <div class="card-title">Unsere Vision</div>
@@ -332,7 +389,6 @@
 
   </div>
 
-  <!-- Barrierefreie Liste -->
   <section class="accessible-list" id="accessible-list-view">
     <h1>CORUNEVA – Inhaltsübersicht</h1>
     <ul>
@@ -414,7 +470,6 @@
       activeLevel2Path = removePath(activeLevel2Path);
     }
 
-    // Logo Klick -> Toggle (Ein- und Ausklappen aller Punkte)
     centerNode.addEventListener('click', () => {
       if (!isRevealed) {
         isRevealed = true;
@@ -424,7 +479,6 @@
       }
     });
 
-    // Klick auf Hauptpunkte
     document.querySelectorAll('.main-node').forEach(node => {
       node.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -454,7 +508,6 @@
       });
     });
 
-    // Klick auf Unterpunkte (Vision, Mission etc.)
     document.querySelectorAll('.subnode').forEach(sub => {
       sub.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -471,7 +524,6 @@
       });
     });
 
-    // Barrierefreie Ansicht Umschalter
     toggleViewBtn.addEventListener('click', () => {
       const isList = listView.style.display === 'block';
       if (isList) {
