@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CORUNEVA </title>
+  <title>CORUNEVA</title>
   <style>
     :root {
       --bg-color: #060a12;
@@ -33,6 +33,31 @@
       position: relative;
     }
 
+    /* Barrierefreiheits-Button oben links */
+    .a11y-nav {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 200;
+    }
+
+    .a11y-btn {
+      background: var(--node-bg);
+      color: var(--text-main);
+      border: 1px solid var(--node-border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .a11y-btn:hover, .a11y-btn:focus {
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+      outline: none;
+    }
+
     /* SVG Canvas für Verbindungslinien */
     #svg-canvas {
       position: absolute;
@@ -50,7 +75,7 @@
       stroke-width: 2.5;
       stroke-linecap: round;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: stroke-dashoffset 0.4s ease-in-out, opacity 0.3s ease;
     }
 
     .line-path.visible {
@@ -68,7 +93,7 @@
       z-index: 2;
     }
 
-    /* Zentrales Logo mit dem intensiven Aura-Glow aus dem Screenshot */
+    /* Zentrum: Logo mit Aura-Glow */
     .center-node {
       position: absolute;
       display: flex;
@@ -96,15 +121,21 @@
 
     @keyframes pulse-aura {
       0%, 100% {
-        box-shadow: 0 0 40px rgba(0, 242, 254, 0.3), 0 0 80px rgba(0, 230, 118, 0.15);
+        box-shadow: 0 0 35px rgba(0, 242, 254, 0.3), 0 0 70px rgba(0, 230, 118, 0.15);
       }
       50% {
-        box-shadow: 0 0 70px rgba(0, 242, 254, 0.6), 0 0 120px rgba(0, 230, 118, 0.35);
+        box-shadow: 0 0 65px rgba(0, 242, 254, 0.6), 0 0 110px rgba(0, 230, 118, 0.35);
       }
     }
 
+    .logo-img {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+    }
+
     .brand-title {
-      margin-top: 18px;
+      margin-top: 16px;
       font-size: 26px;
       font-weight: 800;
       letter-spacing: 2.5px;
@@ -120,7 +151,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* Mind-Map Knotenpunkte (Standardmäßig unsichtbar bis Logo geklickt wird) */
+    /* Mind-Map Knotenpunkte */
     .node {
       position: absolute;
       background: var(--node-bg);
@@ -137,6 +168,7 @@
       transform: scale(0.8);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 5;
+      max-width: 200px;
     }
 
     .node.revealed {
@@ -150,52 +182,71 @@
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
     }
 
-    /* Unterpunkte (Subnodes) */
+    /* In-Place Erweiterung der Infokarte direkt am Punkt */
+    .node.expanded {
+      max-width: 340px;
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
+      padding: 18px 22px;
+      border-radius: 12px;
+      z-index: 20;
+    }
+
+    .node .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--cyan-glow);
+      margin-bottom: 8px;
+      display: none;
+    }
+
+    .node .card-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: none;
+    }
+
+    .node.expanded .card-title,
+    .node.expanded .card-text {
+      display: block;
+    }
+
     .subnode {
       font-size: 13px;
       padding: 8px 18px;
     }
 
-    /* Modal für Info-Texte */
-    .modal {
-      position: fixed;
-      top: 30px;
-      right: 30px;
-      background: #0f172a;
-      border: 1px solid var(--cyan-glow);
-      box-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
-      border-radius: 12px;
-      padding: 24px;
-      max-width: 380px;
+    /* Textbasierte Barrierefreie Ansicht */
+    .accessible-list {
+      display: none;
+      max-width: 800px;
       width: 90%;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
+      margin: 80px auto;
+      z-index: 10;
     }
 
-    .modal.open {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
+    .accessible-list h1 { margin-bottom: 20px; font-size: 28px; }
+    .accessible-list ul { list-style: none; padding: 0; }
+    .accessible-list li { 
+      background: var(--node-bg); 
+      margin-bottom: 12px; 
+      padding: 16px; 
+      border-radius: 8px; 
+      border: 1px solid var(--node-border);
     }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .modal-title { font-size: 18px; font-weight: 700; color: var(--cyan-glow); }
-    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; }
-    .modal-body { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+    .accessible-list h2 { color: var(--cyan-glow); font-size: 18px; margin-bottom: 6px; }
   </style>
 </head>
 <body>
 
-  <!-- SVG Overlay für Linien und Farbverläufe -->
+  <!-- Barrierefreiheits-Navigation -->
+  <nav class="a11y-nav" aria-label="Barrierefreiheit">
+    <button class="a11y-btn" id="toggle-view-btn">Textansicht (Barrierefrei)</button>
+  </nav>
+
+  <!-- SVG Canvas für Linien -->
   <svg id="svg-canvas">
     <defs>
       <linearGradient id="cyan-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -205,12 +256,13 @@
     </defs>
   </svg>
 
-  <div class="mindmap-container" id="container">
+  <div class="mindmap-container" id="mindmap-view">
     
-    <!-- Zentrum: Logo & Titel -->
+    <!-- Zentrum: Original-Logo & Titel -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
-        <svg width="85" height="85" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo" onerror="this.style.display='none'; document.getElementById('fallback-svg-logo').style.display='block';">
+        <svg id="fallback-svg-logo" style="display:none;" width="85" height="85" viewBox="0 0 100 100" fill="none">
           <path d="M 50 10 A 40 40 0 1 1 15 35" stroke="url(#cyan-green-grad)" stroke-width="10" stroke-linecap="round"/>
           <circle cx="50" cy="35" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
           <circle cx="32" cy="65" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
@@ -222,60 +274,93 @@
       <p class="brand-subtitle">Klicke und erfahre mehr</p>
     </div>
 
-    <!-- Hauptknoten (Anfangs unsichtbar) -->
-    <div class="node main-node" id="node-uber-uns" style="top: 25%; left: 30%;">Über uns</div>
-    <div class="node main-node" id="node-produkt" style="top: 25%; left: 70%;">Produkt</div>
-    <div class="node main-node" id="node-faq" style="top: 50%; left: 80%;">FAQ</div>
-    <div class="node main-node" id="node-kontakt" style="top: 75%; left: 70%;">Kontakt</div>
-    <div class="node main-node" id="node-preise" style="top: 75%; left: 30%;">Preise</div>
-
-    <!-- Unterpunkte -->
-    <div class="node subnode" id="node-vision" style="top: 15%; left: 15%;">Vision</div>
-    <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;">Mission</div>
-    <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;">Impressum</div>
-    <div class="node subnode" id="node-kontaktformular" style="top: 85%; left: 80%;">Kontaktformular</div>
-
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="info-modal">
-    <div class="modal-header">
-      <div class="modal-title" id="modal-title">Titel</div>
-      <button class="close-btn" id="modal-close">&times;</button>
+    <!-- Hauptknoten -->
+    <div class="node main-node" id="node-uber-uns" style="top: 25%; left: 30%;">
+      <div class="label-text">Über uns</div>
+      <div class="card-title">Über uns</div>
+      <div class="card-text">Erfahre mehr über Coruneva, unsere Philosophie und was uns antreibt.</div>
     </div>
-    <div class="modal-body" id="modal-body">Inhalt...</div>
+
+    <div class="node main-node" id="node-produkt" style="top: 25%; left: 70%;">
+      <div class="label-text">Produkt</div>
+      <div class="card-title">Coruneva Plattform</div>
+      <div class="card-text">Erfahre mehr über die 3 Ebenen von Coruneva: Von der Befragung der Mitarbeitenden über das Teammatching bis hin zur strategischen Unternehmensanalyse.</div>
+    </div>
+
+    <div class="node main-node" id="node-faq" style="top: 50%; left: 80%;">
+      <div class="label-text">FAQ</div>
+      <div class="card-title">Häufige Fragen</div>
+      <div class="card-text">Hier finden Sie Antworten zu Datenschutz (DSGVO), Integrationen und dem Ablauf von Konsensworkshops.</div>
+    </div>
+
+    <div class="node main-node" id="node-kontakt" style="top: 75%; left: 70%;">
+      <div class="label-text">Kontakt</div>
+      <div class="card-title">Kontakt aufnehmen</div>
+      <div class="card-text">Sprechen Sie mit unserem Team für Demos, Partneranfragen oder Unterstützung.</div>
+    </div>
+
+    <div class="node main-node" id="node-preise" style="top: 75%; left: 30%;">
+      <div class="label-text">Preise</div>
+      <div class="card-title">Preise & Modelle</div>
+      <div class="card-text">Flexibel auf Ihre Unternehmensgröße angepasst. Kontaktieren Sie uns für ein individuelles Angebot.</div>
+    </div>
+
+    <!-- Unterpunkte (Getrennt) -->
+    <div class="node subnode" id="node-vision" style="top: 15%; left: 15%;">
+      <div class="label-text">Vision</div>
+      <div class="card-title">Unsere Vision</div>
+      <div class="card-text">Unsere Vision ist es, Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse nahtlos vereint.</div>
+    </div>
+
+    <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;">
+      <div class="label-text">Mission</div>
+      <div class="card-title">Unsere Mission</div>
+      <div class="card-text">Wir befähigen Organisationen durch einen strukturierten 3-Schritte-Konsensprozess, echte Klarheit zu schaffen und nachhaltige Entwicklung messbar zu machen.</div>
+    </div>
+
+    <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;">
+      <div class="label-text">Impressum</div>
+      <div class="card-title">Impressum</div>
+      <div class="card-text">Angaben gemäß § 5 TMG. Coruneva GmbH...</div>
+    </div>
+
+    <div class="node subnode" id="node-kontaktformular" style="top: 85%; left: 80%;">
+      <div class="label-text">Kontaktformular</div>
+      <div class="card-title">Direktnachricht</div>
+      <div class="card-text">Schreiben Sie uns eine Nachricht, um ein Beratungsgespräch zu vereinbaren.</div>
+    </div>
+
   </div>
+
+  <!-- Barrierefreie Liste -->
+  <section class="accessible-list" id="accessible-list-view">
+    <h1>CORUNEVA – Inhaltsübersicht</h1>
+    <ul>
+      <li><h2>Unsere Vision</h2><p>Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse vereint.</p></li>
+      <li><h2>Unsere Mission</h2><p>Organisationen durch einen 3-Schritte-Konsensprozess befähigen.</p></li>
+      <li><h2>Produkt</h2><p>Die 3 Ebenen von Coruneva: Mitarbeitende, Team und strategische Unternehmensanalyse.</p></li>
+      <li><h2>Preise</h2><p>Flexibel auf Unternehmensgröße angepasst.</p></li>
+      <li><h2>FAQ</h2><p>Fragen zu Datenschutz (DSGVO) und Konsensworkshops.</p></li>
+    </ul>
+  </section>
 
   <script>
     const svgCanvas = document.getElementById('svg-canvas');
     const centerNode = document.getElementById('center-node');
-    const modal = document.getElementById('info-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
-    const modalClose = document.getElementById('modal-close');
+    const toggleViewBtn = document.getElementById('toggle-view-btn');
+    const mindmapView = document.getElementById('mindmap-view');
+    const listView = document.getElementById('accessible-list-view');
 
-    let mainNodesRevealed = false;
-    const activePaths = new Map(); // Speichert aktive Linien
-
-    const contentData = {
-      'node-vision': { title: 'Unsere Vision', text: 'Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse nahtlos vereint.' },
-      'node-mission': { title: 'Unsere Mission', text: 'Wir befähigen Organisationen durch einen strukturierten 3-Schritte-Konsensprozess, echte Klarheit zu schaffen.' },
-      'node-produkt': { title: 'Coruneva Produkt', text: 'Erfahre mehr über die 3 Ebenen von Coruneva: Von Befragungen bis zur strategischen Unternehmensanalyse.' },
-      'node-preise': { title: 'Preise & Modelle', text: 'Flexibel auf Ihre Unternehmensgröße angepasst.' },
-      'node-faq': { title: 'FAQ', text: 'Häufig gestellte Fragen zu Datenschutz und Ablauf.' },
-      'node-impressum': { title: 'Impressum', text: 'Angaben gemäß § 5 TMG.' },
-      'node-kontaktformular': { title: 'Kontakt', text: 'Schreiben Sie uns eine Nachricht.' }
-    };
+    let isRevealed = false;
+    let activeLevel1Path = null;
+    let activeLevel2Path = null;
 
     function getCenterCoords(el) {
       const rect = el.getBoundingClientRect();
       return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     }
 
-    // Animierte Verbindungslinie zeichnen
-    function drawLine(parentId, childId, key) {
-      if (activePaths.has(key)) return;
-
+    function createPath(parentId, childId) {
       const parent = document.getElementById(parentId);
       const child = document.getElementById(childId);
       const p = getCenterCoords(parent);
@@ -283,7 +368,6 @@
 
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const dx = c.x - p.x;
-      const dy = c.y - p.y;
       const d = `M ${p.x} ${p.y} C ${p.x + dx * 0.5} ${p.y}, ${p.x + dx * 0.5} ${c.y}, ${c.x} ${c.y}`;
       
       path.setAttribute('d', d);
@@ -297,114 +381,111 @@
       path.classList.add('visible');
       path.style.strokeDashoffset = '0';
 
-      activePaths.set(key, path);
+      return path;
     }
 
-    function removeLine(key) {
-      if (activePaths.has(key)) {
-        activePaths.get(key).remove();
-        activePaths.delete(key);
+    function removePath(pathRef) {
+      if (pathRef) {
+        pathRef.remove();
       }
+      return null;
     }
 
-    // 1. Schritt: Klick auf Logo lässt Hauptpunkte erscheinen
+    function clearAllExpandedNodes() {
+      document.querySelectorAll('.node').forEach(n => {
+        n.classList.remove('expanded');
+        n.classList.remove('active');
+      });
+    }
+
+    function closeSubnodes() {
+      document.querySelectorAll('.subnode').forEach(n => n.classList.remove('revealed'));
+      activeLevel2Path = removePath(activeLevel2Path);
+    }
+
+    function closeAll() {
+      isRevealed = false;
+      document.querySelectorAll('.node').forEach(n => {
+        n.classList.remove('revealed');
+        n.classList.remove('expanded');
+        n.classList.remove('active');
+      });
+      activeLevel1Path = removePath(activeLevel1Path);
+      activeLevel2Path = removePath(activeLevel2Path);
+    }
+
+    // Logo Klick -> Toggle (Ein- und Ausklappen aller Punkte)
     centerNode.addEventListener('click', () => {
-      if (!mainNodesRevealed) {
-        mainNodesRevealed = true;
-        document.querySelectorAll('.main-node').forEach(node => {
-          node.classList.add('revealed');
-        });
+      if (!isRevealed) {
+        isRevealed = true;
+        document.querySelectorAll('.main-node').forEach(n => n.classList.add('revealed'));
+      } else {
+        closeAll();
       }
-      modal.classList.remove('open');
     });
 
-    // 2. & 3. Schritt: Klick auf Hauptpunkte
+    // Klick auf Hauptpunkte
     document.querySelectorAll('.main-node').forEach(node => {
       node.addEventListener('click', (e) => {
         e.stopPropagation();
         const id = node.id;
 
-        // Wenn ein anderer Hauptast geklickt wird -> Vorherigen Ast ("Über uns" inkl. Vision/Mission) komplett aufräumen
-        if (id !== 'node-uber-uns') {
-          removeLine('center-uber-uns');
-          removeLine('uber-uns-vision');
-          removeLine('uber-uns-mission');
-          document.getElementById('node-uber-uns').classList.remove('active');
-          document.getElementById('node-vision').classList.remove('revealed');
-          document.getElementById('node-mission').classList.remove('revealed');
-        }
-        if (id !== 'node-kontakt') {
-          removeLine('center-kontakt');
-          removeLine('kontakt-impressum');
-          removeLine('kontakt-formular');
-          document.getElementById('node-kontakt').classList.remove('active');
-          document.getElementById('node-impressum').classList.remove('revealed');
-          document.getElementById('node-kontaktformular').classList.remove('revealed');
-        }
+        clearAllExpandedNodes();
+        closeSubnodes();
 
-        // Aktiven Zustand setzen
-        document.querySelectorAll('.main-node').forEach(n => n.classList.remove('active'));
         node.classList.add('active');
 
-        // Linie vom Logo zum Hauptpunkt zeichnen
-        drawLine('center-node', id, `center-${id.replace('node-', '')}`);
+        activeLevel1Path = removePath(activeLevel1Path);
+        activeLevel1Path = createPath('center-node', id);
 
-        // Spezialfall "Über uns": Nach Erreichen der Linie Vision & Mission einblenden
         if (id === 'node-uber-uns') {
           setTimeout(() => {
             document.getElementById('node-vision').classList.add('revealed');
             document.getElementById('node-mission').classList.add('revealed');
-          }, 400); // Nach Animationsende der Hauptlinie
+          }, 350);
         } else if (id === 'node-kontakt') {
           setTimeout(() => {
             document.getElementById('node-impressum').classList.add('revealed');
             document.getElementById('node-kontaktformular').classList.add('revealed');
-          }, 400);
+          }, 350);
         } else {
-          // Modal öffnen bei anderen Punkten
-          if (contentData[id]) {
-            modalTitle.innerText = contentData[id].title;
-            modalBody.innerText = contentData[id].text;
-            modal.classList.add('open');
-          }
+          node.classList.add('expanded');
         }
       });
     });
 
-    // 4. Schritt: Klick auf Unterpunkte (z.B. Vision)
-    document.getElementById('node-vision').addEventListener('click', (e) => {
-      e.stopPropagation();
-      drawLine('node-uber-uns', 'node-vision', 'uber-uns-vision');
-      modalTitle.innerText = contentData['node-vision'].title;
-      modalBody.innerText = contentData['node-vision'].text;
-      modal.classList.add('open');
+    // Klick auf Unterpunkte (Vision, Mission etc.)
+    document.querySelectorAll('.subnode').forEach(sub => {
+      sub.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = sub.id;
+
+        clearAllExpandedNodes();
+        activeLevel2Path = removePath(activeLevel2Path);
+
+        sub.classList.add('active');
+        sub.classList.add('expanded');
+
+        const parentId = (id === 'node-vision' || id === 'node-mission') ? 'node-uber-uns' : 'node-kontakt';
+        activeLevel2Path = createPath(parentId, id);
+      });
     });
 
-    document.getElementById('node-mission').addEventListener('click', (e) => {
-      e.stopPropagation();
-      drawLine('node-uber-uns', 'node-mission', 'uber-uns-mission');
-      modalTitle.innerText = contentData['node-mission'].title;
-      modalBody.innerText = contentData['node-mission'].text;
-      modal.classList.add('open');
+    // Barrierefreie Ansicht Umschalter
+    toggleViewBtn.addEventListener('click', () => {
+      const isList = listView.style.display === 'block';
+      if (isList) {
+        listView.style.display = 'none';
+        mindmapView.style.display = 'flex';
+        svgCanvas.style.display = 'block';
+        toggleViewBtn.innerText = 'Textansicht (Barrierefrei)';
+      } else {
+        listView.style.display = 'block';
+        mindmapView.style.display = 'none';
+        svgCanvas.style.display = 'none';
+        toggleViewBtn.innerText = 'Mind-Map Ansicht';
+      }
     });
-
-    document.getElementById('node-impressum').addEventListener('click', (e) => {
-      e.stopPropagation();
-      drawLine('node-kontakt', 'node-impressum', 'kontakt-impressum');
-      modalTitle.innerText = contentData['node-impressum'].title;
-      modalBody.innerText = contentData['node-impressum'].text;
-      modal.classList.add('open');
-    });
-
-    document.getElementById('node-kontaktformular').addEventListener('click', (e) => {
-      e.stopPropagation();
-      drawLine('node-kontakt', 'node-kontaktformular', 'kontakt-formular');
-      modalTitle.innerText = contentData['node-kontaktformular'].title;
-      modalBody.innerText = contentData['node-kontaktformular'].text;
-      modal.classList.add('open');
-    });
-
-    modalClose.addEventListener('click', () => modal.classList.remove('open'));
   </script>
 </body>
 </html>
