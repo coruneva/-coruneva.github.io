@@ -134,15 +134,15 @@
       object-fit: contain;
     }
 
+    /* Originalgetreuer, schlanker Schriftstil exakt nach Screenshot */
     .brand-title {
       margin-top: 20px;
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: 5px;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 4px;
       color: #ffffff;
       text-transform: uppercase;
       text-align: center;
-      text-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
     }
 
     .brand-subtitle {
@@ -268,7 +268,7 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- ZENTRUM: Logo, Slogan und Klick-Hinweis -->
+    <!-- ZENTRUM -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
         <img class="logo-img" src="Logo_Coruneva_ohne_Text_transparent.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva - ohne Text.png';">
@@ -392,13 +392,13 @@
       };
     }
 
-    function createPath(parentId, childId) {
-      const parent = document.getElementById(parentId);
-      const child = document.getElementById(childId);
-      if (!parent || !child) return null;
+    function createPath(fromId, toId) {
+      const fromEl = document.getElementById(fromId);
+      const toEl = document.getElementById(toId);
+      if (!fromEl || !toEl) return null;
 
-      const p = getCenterCoords(parent);
-      const c = getCenterCoords(child);
+      const p = getCenterCoords(fromEl);
+      const c = getCenterCoords(toEl);
 
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const dx = c.x - p.x;
@@ -488,6 +488,7 @@
         activeLevel1Path = removePath(activeLevel1Path);
         activeLevel1ParentId = 'center-node';
         activeLevel1ChildId = id;
+        // Linie startet jetzt immer beim Logo ('center-node') und läuft zum Knoten
         activeLevel1Path = createPath(activeLevel1ParentId, activeLevel1ChildId);
 
         if (id === 'node-uber-uns') {
