@@ -33,7 +33,7 @@
       position: relative;
     }
 
-    /* Barrierefreiheits-Button oben links */
+    /* Barrierefreiheits-Button */
     .a11y-nav {
       position: absolute;
       top: 20px;
@@ -93,7 +93,7 @@
       z-index: 2;
     }
 
-    /* ZENTRUM: Logo & Nebel-Aura im Code aufgebaut */
+    /* ZENTRUM: Logo & Organische Rauch-Aura */
     .center-node {
       position: absolute;
       display: flex;
@@ -105,104 +105,66 @@
       user-select: none;
     }
 
-    .aura-container {
+    .aura-wrapper {
       position: relative;
-      width: 210px;
-      height: 210px;
+      width: 260px;
+      height: 260px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Nebel-/Plasma-Glow Schichten hinter dem Logo */
-    .aura-cloud-1 {
+    /* Organische Nebel-Aura Schichten */
+    .smoke-aura-bg {
       position: absolute;
-      width: 210px;
-      height: 210px;
+      width: 250px;
+      height: 250px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 242, 254, 0.45) 0%, rgba(0, 230, 118, 0.25) 45%, rgba(6, 10, 18, 0) 70%);
-      filter: blur(18px);
-      animation: rotateCloud 12s linear infinite, pulseOpacity 4s ease-in-out infinite;
+      background: radial-gradient(circle, rgba(0,242,254,0.7) 0%, rgba(0,230,118,0.4) 40%, rgba(0,114,255,0.2) 65%, rgba(6,10,18,0) 80%);
+      filter: url(#smoke-filter) blur(6px);
+      animation: rotateSmoke 18s linear infinite;
     }
 
-    .aura-cloud-2 {
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-      background: radial-gradient(circle, rgba(0, 242, 254, 0.6) 10%, rgba(0, 230, 118, 0.35) 50%, rgba(0,0,0,0) 75%);
-      filter: blur(12px);
-      animation: rotateCloudReverse 8s linear infinite;
-    }
-
-    .aura-rays {
+    .smoke-aura-overlay {
       position: absolute;
       width: 230px;
       height: 230px;
       border-radius: 50%;
-      background: repeating-conic-gradient(
-        from 0deg,
-        rgba(0, 242, 254, 0.25) 0deg 15deg,
-        transparent 15deg 30deg,
-        rgba(0, 230, 118, 0.2) 30deg 45deg,
-        transparent 45deg 60deg
-      );
-      filter: blur(8px);
-      animation: rotateCloud 20s linear infinite;
+      background: radial-gradient(circle, rgba(0,242,254,0.5) 10%, rgba(0,230,118,0.3) 50%, transparent 70%);
+      filter: url(#smoke-filter-2) blur(4px);
+      animation: rotateSmokeRev 12s linear infinite;
     }
 
-    @keyframes rotateCloud {
+    @keyframes rotateSmoke {
       0% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.06); }
+      50% { transform: rotate(180deg) scale(1.04); }
       100% { transform: rotate(360deg) scale(1); }
     }
 
-    @keyframes rotateCloudReverse {
+    @keyframes rotateSmokeRev {
       0% { transform: rotate(360deg) scale(1); }
-      50% { transform: rotate(180deg) scale(0.95); }
+      50% { transform: rotate(180deg) scale(0.96); }
       100% { transform: rotate(0deg) scale(1); }
     }
 
-    @keyframes pulseOpacity {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 1; }
-    }
-
-    .logo-wrapper {
+    /* Dunkler Kreis-Hintergrund für den Firmenkern */
+    .logo-circle-core {
       position: relative;
-      width: 140px;
-      height: 140px;
+      width: 170px;
+      height: 170px;
       border-radius: 50%;
       background: #090e17;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 2;
-      border: 1px solid rgba(0, 242, 254, 0.5);
-      box-shadow: inset 0 0 20px rgba(0, 242, 254, 0.3);
+      z-index: 5;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 242, 254, 0.3);
     }
 
     .logo-img {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 150px;
       object-fit: contain;
-    }
-
-    .brand-title {
-      margin-top: 14px;
-      font-size: 26px;
-      font-weight: 800;
-      letter-spacing: 2.5px;
-      color: #ffffff;
-      text-transform: uppercase;
-    }
-
-    .brand-subtitle {
-      margin-top: 4px;
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 400;
-      letter-spacing: 0.5px;
     }
 
     /* Mind-Map Knotenpunkte */
@@ -236,7 +198,6 @@
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
     }
 
-    /* In-Place Erweiterung der Infokarte */
     .node.expanded {
       max-width: 340px;
       border-color: var(--cyan-glow);
@@ -272,7 +233,7 @@
       padding: 8px 18px;
     }
 
-    /* Textbasierte Barrierefreie Ansicht */
+    /* Barrierefreie Liste */
     .accessible-list {
       display: none;
       max-width: 800px;
@@ -299,36 +260,39 @@
     <button class="a11y-btn" id="toggle-view-btn">Textansicht (Barrierefrei)</button>
   </nav>
 
+  <!-- SVG Filter für echte organische Nebel-Aura & Linien -->
   <svg id="svg-canvas">
     <defs>
       <linearGradient id="cyan-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stop-color="#00f2fe"/>
         <stop offset="100%" stop-color="#00e676"/>
       </linearGradient>
+
+      <!-- Organischer Rauch-Filter 1 -->
+      <filter id="smoke-filter" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="4" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+
+      <!-- Organischer Rauch-Filter 2 -->
+      <filter id="smoke-filter-2" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="turbulence" baseFrequency="0.035" numOctaves="3" result="noise2" />
+        <feDisplacementMap in="SourceGraphic" in2="noise2" scale="25" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
     </defs>
   </svg>
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- Zentrum: Nebel-Aura-Effekte & Logo -->
+    <!-- Zentrum: Nebel-Aura + Dunkler Kern + Logo -->
     <div class="center-node" id="center-node">
-      <div class="aura-container">
-        <div class="aura-rays"></div>
-        <div class="aura-cloud-1"></div>
-        <div class="aura-cloud-2"></div>
-        <div class="logo-wrapper">
-          <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo" onerror="this.style.display='none'; document.getElementById('fallback-svg-logo').style.display='block';">
-          <svg id="fallback-svg-logo" style="display:none;" width="85" height="85" viewBox="0 0 100 100" fill="none">
-            <path d="M 50 10 A 40 40 0 1 1 15 35" stroke="url(#cyan-green-grad)" stroke-width="10" stroke-linecap="round"/>
-            <circle cx="50" cy="35" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
-            <circle cx="32" cy="65" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
-            <circle cx="68" cy="65" r="9" fill="none" stroke="#00e676" stroke-width="5"/>
-            <path d="M 43 40 L 37 58 M 57 40 L 63 58 M 39 65 L 61 65" stroke="url(#cyan-green-grad)" stroke-width="4"/>
-          </svg>
+      <div class="aura-wrapper">
+        <div class="smoke-aura-bg"></div>
+        <div class="smoke-aura-overlay"></div>
+        <div class="logo-circle-core">
+          <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo">
         </div>
       </div>
-      <h1 class="brand-title">CORUNEVA</h1>
-      <p class="brand-subtitle">Klicke und erfahre mehr</p>
     </div>
 
     <!-- Hauptknoten -->
