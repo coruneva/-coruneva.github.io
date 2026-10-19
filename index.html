@@ -6,14 +6,13 @@
   <title>CORUNEVA – Digitales Organisationsgedächtnis</title>
   <style>
     :root {
-      --bg-color: #0d121f; /* Sehr dunkles Blau, wie im Bild */
-      --node-bg: #111a2e; /* Dunklerer Knoten-Hintergrund */
-      --node-border: #1e2d4a; /* Dezenter Rand */
-      --node-text: #ffffff; /* Weißer Text */
-      --cyan-active: #00f2fe; /* Cyan für aktive Verbindungen */
-      --cyan-glow-intense: rgba(0, 242, 254, 0.7); /* Intensiverer Glow */
-      --cyan-glow-subtle: rgba(0, 242, 254, 0.1);
-      --focus-ring: #ffe600; /* High Contrast Fokus-Farbe */
+      --bg-color: #0b111e;
+      --node-bg: #131c2e;
+      --node-border: #1e2d4a;
+      --cyan-glow: #00f2fe;
+      --green-glow: #00e676;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
     }
 
     * {
@@ -25,28 +24,41 @@
 
     body {
       background-color: var(--bg-color);
-      color: var(--node-text);
+      color: var(--text-main);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      overflow-x: hidden;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
     }
 
-    /* Barrierefreiheits-Skip-Link */
-    .skip-link {
+    /* Barrierefreiheits-Button oben links */
+    .a11y-nav {
       position: absolute;
-      top: -40px;
-      left: 0;
-      background: var(--cyan-active);
-      color: #000;
-      padding: 8px;
-      z-index: 100;
+      top: 20px;
+      left: 20px;
+      z-index: 200;
     }
-    .skip-link:focus { top: 0; }
 
-    /* SVG Canvas für Verbindungslinien */
+    .a11y-btn {
+      background: var(--node-bg);
+      color: var(--text-main);
+      border: 1px solid var(--node-border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .a11y-btn:hover, .a11y-btn:focus {
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+      outline: none;
+    }
+
+    /* SVG Canvas für Linien */
     #svg-canvas {
       position: absolute;
       top: 0;
@@ -59,15 +71,14 @@
 
     .line-path {
       fill: none;
-      stroke: var(--cyan-active);
       stroke-width: 2.5;
       stroke-linecap: round;
-      opacity: 0; /* Standardmäßig unsichtbar */
-      transition: opacity 0.4s ease, stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: stroke-dashoffset 0.5s ease-in-out, opacity 0.3s ease;
+      opacity: 0;
     }
 
-    .line-path.active {
-        opacity: 1;
+    .line-path.visible {
+      opacity: 1;
     }
 
     /* Mind-Map Container */
@@ -81,7 +92,7 @@
       z-index: 2;
     }
 
-    /* Pulsierendes Zentrum: Logo & Text */
+    /* Pulsierendes Logo in der Mitte */
     .center-node {
       position: absolute;
       display: flex;
@@ -89,89 +100,58 @@
       align-items: center;
       justify-content: center;
       z-index: 10;
+      cursor: pointer;
     }
 
-    /* WICHTIG: Struktur für Logo und Pulsier-Effekt */
-    .center-visuals {
+    .logo-wrapper {
       position: relative;
-      width: 140px; /* Durchmesser des Logos/Kreises */
-      height: 140px;
-      margin-bottom: 20px; /* Abstand zum Text darunter */
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: #0d1627;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.3);
+      animation: pulse 3s infinite ease-in-out;
     }
 
-    .logo-img {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      z-index: 2; /* Logo liegt ÜBER dem pulsierenden Kreis */
-    }
-
-    /* Der pulsierende Kreis - exakt wie im Soll-Bild */
-    .pulsing-circle {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: none;
-      border: 3px solid var(--cyan-active); /* Cyan-Rand */
-      box-shadow: 0 0 30px var(--cyan-glow-intense); /* Intensiverer Glow */
-      z-index: 1; /* Pulsierender Kreis liegt UNTER dem Logo */
-      animation: pulse-ring 2.5s infinite ease-in-out;
-    }
-
-    @keyframes pulse-ring {
+    @keyframes pulse {
       0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 30px var(--cyan-glow-intense);
+        box-shadow: 0 0 30px rgba(0, 242, 254, 0.3), 0 0 60px rgba(0, 230, 118, 0.15);
       }
       50% {
-        transform: scale(1.05); /* Nur leichtes Skalieren */
-        opacity: 0.8; /* Leichtes Dimmen */
-        box-shadow: 0 0 50px var(--cyan-glow-intense);
+        box-shadow: 0 0 50px rgba(0, 242, 254, 0.6), 0 0 90px rgba(0, 230, 118, 0.35);
       }
     }
 
-    /* WICHTIG: Animationen & Pulsieren abschalten bei reduzierter Bewegung */
     @media (prefers-reduced-motion: reduce) {
-      .pulsing-circle {
-        animation: none !important;
-      }
-      .line-path, .node, .subnode, .modal {
-        transition: none !important;
-      }
-    }
-
-    /* Zentrumstext */
-    .center-text {
-        text-align: center;
+      .logo-wrapper { animation: none !important; }
+      .line-path, .node, .subnode, .modal { transition: none !important; }
     }
 
     .brand-title {
-      font-size: 26px;
+      margin-top: 15px;
+      font-size: 24px;
       font-weight: 800;
-      letter-spacing: 2.5px;
-      color: #ffffff;
+      letter-spacing: 2px;
+      color: #ffffff; /* Exakt Weiß */
       text-transform: uppercase;
     }
 
     .brand-subtitle {
-      margin-top: 5px;
+      margin-top: 4px;
       font-size: 13px;
       color: var(--text-muted);
       font-weight: 400;
-      letter-spacing: 0.5px;
     }
 
-    /* Mind-Map Knotenpunkte (Standard) */
+    /* Mind-Map Knotenpunkte */
     .node {
       position: absolute;
       background: var(--node-bg);
       border: 1px solid var(--node-border);
-      color: var(--node-text);
+      color: var(--text-main);
       padding: 10px 22px;
       border-radius: 20px;
       font-size: 14px;
@@ -183,25 +163,25 @@
     }
 
     .node:hover {
-      border-color: var(--cyan-active);
-      box-shadow: 0 0 15px var(--cyan-glow-intense);
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
       transform: scale(1.05);
     }
 
     .node.active {
-      border-color: var(--cyan-active);
-      box-shadow: 0 0 20px var(--cyan-glow-intense);
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
       color: #ffffff;
     }
 
-    /* Unterpunkte (Subnodes) */
+    /* Unterpunkte */
     .subnode {
       font-size: 13px;
       padding: 8px 18px;
       opacity: 0;
       pointer-events: none;
       transform: scale(0.8);
-      transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
     .subnode.visible {
@@ -210,34 +190,29 @@
       transform: scale(1);
     }
 
-    /* Fokus-Indikator für Tastaturnavigation */
-    .node:focus, .close-btn:focus, .skip-link:focus {
-      outline: 3px solid var(--focus-ring);
-      outline-offset: 3px;
-    }
-
-    /* Modal Dialog */
+    /* Modal / Textfeld – Positioniert oben rechts, um das Logo nicht zu verdecken */
     .modal {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 30px;
+      right: 30px;
       background: #111a2e;
-      border: 1px solid var(--cyan-active);
-      box-shadow: 0 0 30px var(--cyan-glow-intense);
+      border: 1px solid var(--cyan-glow);
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
       border-radius: 12px;
       padding: 24px;
-      max-width: 450px;
+      max-width: 380px;
       width: 90%;
       z-index: 100;
-      display: none;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      pointer-events: none;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
     }
 
     .modal.open {
-      display: block;
       opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
     }
 
     .modal-header {
@@ -247,56 +222,132 @@
       margin-bottom: 12px;
     }
 
-    .modal-title { font-size: 18px; font-weight: 700; color: var(--cyan-active); }
-    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
-    .modal-body { font-size: 14px; line-height: 1.6; color: var(--text-muted); }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--cyan-glow);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* Barrierefreie Liste */
+    .accessible-list {
+      display: none;
+      max-width: 800px;
+      width: 90%;
+      margin: 80px auto;
+      z-index: 10;
+    }
+
+    .accessible-list h1 { margin-bottom: 20px; font-size: 28px; }
+    .accessible-list ul { list-style: none; padding: 0; }
+    .accessible-list li { 
+      background: var(--node-bg); 
+      margin-bottom: 12px; 
+      padding: 16px; 
+      border-radius: 8px; 
+      border: 1px solid var(--node-border);
+    }
+    .accessible-list h2 { color: var(--cyan-glow); font-size: 18px; margin-bottom: 6px; }
   </style>
 </head>
 <body>
 
-  <!-- Skip Link für Barrierefreiheit -->
-  <a href="#center-node" class="skip-link">Zum Inhalt springen</a>
+  <!-- Barrierefreiheits-Navigation -->
+  <nav class="a11y-nav" aria-label="Barrierefreiheit">
+    <button class="a11y-btn" id="toggle-view-btn" aria-expanded="false">
+      Textansicht (Barrierefrei)
+    </button>
+  </nav>
 
-  <!-- SVG Canvas für Verbindungslinien -->
+  <!-- SVG Overlay -->
   <svg id="svg-canvas" aria-hidden="true"></svg>
 
   <!-- Mind-Map Ansicht -->
   <main class="mindmap-container" id="mindmap-view" aria-label="Interaktive Mind-Map Navigation">
     
-    <!-- WICHTIG: Zentrumstext und Visuals getrennt für korrekte Positionierung -->
-    <div class="center-node" id="center-node">
-      <div class="center-visuals">
-        <!-- Der pulsierende Ring -->
-        <div class="pulsing-circle" aria-hidden="true"></div>
-        <!-- Das Logo - exakt positioniert -->
-        <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo">
+    <!-- Zentrum mit eingebettetem SVG-Logo (Garantiert sichtbar!) -->
+    <div class="center-node" id="center-node" tabindex="0" role="button">
+      <div class="logo-wrapper">
+        <svg width="75" height="75" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 50 10 A 40 40 0 1 1 15 35" stroke="url(#cyan-green-grad)" stroke-width="10" stroke-linecap="round"/>
+          <circle cx="50" cy="35" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
+          <circle cx="32" cy="65" r="9" fill="none" stroke="#00f2fe" stroke-width="5"/>
+          <circle cx="68" cy="65" r="9" fill="none" stroke="#00e676" stroke-width="5"/>
+          <path d="M 43 40 L 37 58 M 57 40 L 63 58 M 39 65 L 61 65" stroke="url(#cyan-green-grad)" stroke-width="4"/>
+          <defs>
+            <linearGradient id="cyan-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f2fe"/>
+              <stop offset="100%" stop-color="#00e676"/>
+            </linearGradient>
+          </defs>
+        </svg>
       </div>
-      <div class="center-text">
-        <h1 class="brand-title">CORUNEVA</h1>
-        <p class="brand-subtitle">Klicke und erfahre mehr</p>
-      </div>
+      <h1 class="brand-title">CORUNEVA</h1>
+      <p class="brand-subtitle">Klicke und erfahre mehr</p>
     </div>
 
     <!-- Hauptknoten -->
-    <div class="node" id="node-uber-uns" style="top: 25%; left: 30%;" tabindex="0" role="button" aria-expanded="false">Über uns</div>
+    <div class="node" id="node-uber-uns" style="top: 25%; left: 30%;" tabindex="0" role="button">Über uns</div>
     <div class="node" id="node-produkt" style="top: 25%; left: 70%;" tabindex="0" role="button">Produkt</div>
     <div class="node" id="node-faq" style="top: 50%; left: 80%;" tabindex="0" role="button">FAQ</div>
-    <div class="node" id="node-kontakt" style="top: 75%; left: 70%;" tabindex="0" role="button" aria-expanded="false">Kontakt</div>
+    <div class="node" id="node-kontakt" style="top: 75%; left: 70%;" tabindex="0" role="button">Kontakt</div>
     <div class="node" id="node-preise" style="top: 75%; left: 30%;" tabindex="0" role="button">Preise</div>
 
-    <!-- Unterknoten -->
+    <!-- Getrennte Unterpunkte Vision und Mission -->
     <div class="node subnode" id="node-vision" style="top: 15%; left: 20%;" tabindex="0" role="button">Vision</div>
     <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;" tabindex="0" role="button">Mission</div>
+    
+    <!-- Unterpunkte Kontakt -->
     <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;" tabindex="0" role="button">Impressum</div>
     <div class="node subnode" id="node-kontaktformular" style="top: 85%; left: 80%;" tabindex="0" role="button">Kontaktformular</div>
 
   </main>
 
-  <!-- Modal Dialog -->
+  <!-- Textbasierte Barrierefreie Ansicht -->
+  <section class="accessible-list" id="accessible-list-view">
+    <h1>CORUNEVA – Inhaltsübersicht</h1>
+    <ul>
+      <li>
+        <h2>Vision</h2>
+        <p>Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse nahtlos vereint.</p>
+      </li>
+      <li>
+        <h2>Mission</h2>
+        <p>Wir befähigen Organisationen durch einen strukturierten 3-Schritte-Konsensprozess, echte Klarheit zu schaffen.</p>
+      </li>
+      <li>
+        <h2>Produkt</h2>
+        <p>Erfahre mehr über die 3 Ebenen von Coruneva: Befragungen, Teammatching und strategische Unternehmensanalyse.</p>
+      </li>
+      <li>
+        <h2>Preise</h2>
+        <p>Flexibel auf Ihre Unternehmensgröße angepasst. Kontaktieren Sie uns für ein Angebot.</p>
+      </li>
+      <li>
+        <h2>FAQ</h2>
+        <p>Antworten zu Datenschutz, DSGVO, Integrationen und dem Ablauf von Konsensworkshops.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Modales Textfeld (Positioniert oben rechts) -->
   <div class="modal" id="info-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-header">
       <h2 class="modal-title" id="modal-title">Titel</h2>
-      <button class="close-btn" id="modal-close" aria-label="Fenster schließen">&times;</button>
+      <button class="close-btn" id="modal-close" aria-label="Schließen">&times;</button>
     </div>
     <div class="modal-body" id="modal-body">Inhalt...</div>
   </div>
@@ -307,9 +358,12 @@
     const modalTitle = document.getElementById('modal-title');
     const modalBody = document.getElementById('modal-body');
     const modalClose = document.getElementById('modal-close');
+    const toggleViewBtn = document.getElementById('toggle-view-btn');
+    const mindmapView = document.getElementById('mindmap-view');
+    const listView = document.getElementById('accessible-list-view');
 
-    // Zuordnung von Linien (Parent ID -> Child ID)
-    const activeConnections = new Map();
+    let currentPath = null;
+    let currentActiveNode = null;
 
     const contentData = {
       'node-vision': { title: 'Unsere Vision', text: 'Unsere Vision ist es, Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse nahtlos vereint.' },
@@ -323,26 +377,23 @@
 
     function getCenterCoords(element) {
       const rect = element.getBoundingClientRect();
-      return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
-      };
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     }
 
-    // Zeichnet eine geschwungene fließende Linie mit SVG Animation
-    function drawAnimatedLine(parentId, childId) {
-      const key = `${parentId}-${childId}`;
-      if (activeConnections.has(key)) return;
+    // Zeichnet exakt EINE aktive Verbindungslinie
+    function drawConnection(parentId, childId) {
+      // Alte Linie entfernen
+      if (currentPath) {
+        currentPath.remove();
+        currentPath = null;
+      }
 
       const parent = document.getElementById(parentId);
       const child = document.getElementById(childId);
-
       const pCoords = getCenterCoords(parent);
       const cCoords = getCenterCoords(child);
 
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      
-      // Geschwungener Pfad (Bezier)
       const dx = cCoords.x - pCoords.x;
       const dy = cCoords.y - pCoords.y;
       const cx1 = pCoords.x + dx * 0.5;
@@ -352,21 +403,18 @@
 
       const d = `M ${pCoords.x} ${pCoords.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${cCoords.x} ${cCoords.y}`;
       path.setAttribute('d', d);
-      path.setAttribute('class', 'line-path');
+      path.setAttribute('class', 'line-path visible');
+      path.setAttribute('stroke', 'url(#cyan-green-grad)');
 
       svgCanvas.appendChild(path);
 
-      // Dash Animation für fließenden Aufbau
       const length = path.getTotalLength();
       path.style.strokeDasharray = length;
       path.style.strokeDashoffset = length;
-      
-      // Trigger Redraw
       path.getBoundingClientRect();
-      path.classList.add('active'); // opacity auf 1 setzen
       path.style.strokeDashoffset = '0';
 
-      activeConnections.set(key, path);
+      currentPath = path;
     }
 
     // Event-Handling für Klicks
@@ -375,47 +423,34 @@
         e.stopPropagation();
         const id = node.id;
 
+        // Bisherige Aktive Markierung zurücksetzen
+        if (currentActiveNode) currentActiveNode.classList.remove('active');
+        node.classList.add('active');
+        currentActiveNode = node;
+
         // "Über uns" Klick -> Öffnet Vision & Mission
         if (id === 'node-uber-uns') {
-          node.classList.toggle('active');
-          drawAnimatedLine('center-node', 'node-uber-uns');
-          
-          const vis = document.getElementById('node-vision');
-          const mis = document.getElementById('node-mission');
-          
-          vis.classList.toggle('visible');
-          mis.classList.toggle('visible');
-
-          if (vis.classList.contains('visible')) {
-            setTimeout(() => drawAnimatedLine('node-uber-uns', 'node-vision'), 100);
-            setTimeout(() => drawAnimatedLine('node-uber-uns', 'node-mission'), 200);
-          }
+          drawConnection('center-node', 'node-uber-uns');
+          document.getElementById('node-vision').classList.toggle('visible');
+          document.getElementById('node-mission').classList.toggle('visible');
+          modal.classList.remove('open');
           return;
         }
 
         // "Kontakt" Klick -> Öffnet Impressum & Formular
         if (id === 'node-kontakt') {
-          node.classList.toggle('active');
-          drawAnimatedLine('center-node', 'node-kontakt');
-          
-          const imp = document.getElementById('node-impressum');
-          const form = document.getElementById('node-kontaktformular');
-          
-          imp.classList.toggle('visible');
-          form.classList.toggle('visible');
-
-          if (imp.classList.contains('visible')) {
-            setTimeout(() => drawAnimatedLine('node-kontakt', 'node-impressum'), 100);
-            setTimeout(() => drawAnimatedLine('node-kontakt', 'node-kontaktformular'), 200);
-          }
+          drawConnection('center-node', 'node-kontakt');
+          document.getElementById('node-impressum').classList.toggle('visible');
+          document.getElementById('node-kontaktformular').classList.toggle('visible');
+          modal.classList.remove('open');
           return;
         }
 
-        // Für normale Knoten: Linie zeichnen & Modal öffnen
-        const parentId = id.includes('vision') || id.includes('mission') ? 'node-uber-uns' : 
-                         id.includes('impressum') || id.includes('formular') ? 'node-kontakt' : 'center-node';
+        // Unterpunkte oder normale Knoten
+        const parentId = (id === 'node-vision' || id === 'node-mission') ? 'node-uber-uns' : 
+                         (id === 'node-impressum' || id === 'node-kontaktformular') ? 'node-kontakt' : 'center-node';
 
-        drawAnimatedLine(parentId, id);
+        drawConnection(parentId, id);
 
         if (contentData[id]) {
           modalTitle.innerText = contentData[id].title;
@@ -423,23 +458,25 @@
           modal.classList.add('open');
         }
       });
+    });
 
-      // Tastatur-Bedienung unterstützen (Enter / Space auf Knoten)
-      node.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          node.click();
-        }
-      });
+    // Barrierefreie Ansicht Umschalter
+    toggleViewBtn.addEventListener('click', () => {
+      const isList = listView.style.display === 'block';
+      if (isList) {
+        listView.style.display = 'none';
+        mindmapView.style.display = 'flex';
+        svgCanvas.style.display = 'block';
+        toggleViewBtn.innerText = 'Textansicht (Barrierefrei)';
+      } else {
+        listView.style.display = 'block';
+        mindmapView.style.display = 'none';
+        svgCanvas.style.display = 'none';
+        toggleViewBtn.innerText = 'Mind-Map Ansicht';
+      }
     });
 
     modalClose.addEventListener('click', () => modal.classList.remove('open'));
-    window.addEventListener('click', (e) => {
-        if(e.target === modal || !modal.contains(e.target)){
-            modal.classList.remove('open');
-        }
-    });
-
   </script>
 </body>
 </html>
