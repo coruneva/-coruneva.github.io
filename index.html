@@ -93,7 +93,7 @@
       z-index: 2;
     }
 
-    /* ZENTRUM: Perfekt zentriertes Logo mit Aura-Glow */
+    /* ZENTRUM: Transparentes Logo mit Aura-Glow & exaktem Textstil */
     .center-node {
       position: absolute;
       display: flex;
@@ -105,7 +105,7 @@
       user-select: none;
     }
 
-    .logo-wrapper {
+    .logo-aura-wrapper {
       position: relative;
       width: 180px;
       height: 180px;
@@ -117,7 +117,6 @@
       box-shadow: 0 0 45px rgba(0, 242, 254, 0.4), 0 0 85px rgba(0, 230, 118, 0.2);
       animation: pulse-aura 3.5s infinite ease-in-out;
       border: 2px solid rgba(0, 242, 254, 0.45);
-      overflow: hidden;
     }
 
     @keyframes pulse-aura {
@@ -130,28 +129,29 @@
     }
 
     .logo-img {
-      width: 130px;
-      height: 130px;
+      width: 125px;
+      height: 125px;
       object-fit: contain;
     }
 
-    /* Exakter Textstil für CORUNEVA und Untertitel */
+    /* Textstil exakt wie im Original-Logo (groß, weites Letter-Spacing) */
     .brand-title {
-      margin-top: 18px;
-      font-size: 28px;
+      margin-top: 20px;
+      font-size: 30px;
       font-weight: 800;
-      letter-spacing: 3px;
+      letter-spacing: 5px;
       color: #ffffff;
       text-transform: uppercase;
       text-align: center;
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
     }
 
     .brand-subtitle {
-      margin-top: 6px;
+      margin-top: 5px;
       font-size: 13px;
       color: var(--text-muted);
       font-weight: 400;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       text-align: center;
     }
 
@@ -259,10 +259,10 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- ZENTRUM: Logo ohne Text im Bild + Text-Stil darunter -->
+    <!-- ZENTRUM: Transparentes Logo & originalgetreuer Textstil -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
-        <img class="logo-img" src="Logo_Coruneva_ohne_Text.png" alt="CORUNEVA Logo" onerror="this.src='Logo_C_Only.png';">
+        <img class="logo-img" src="Logo_Coruneva_ohne_Text_transparent.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva - ohne Text.png';">
       </div>
       <h1 class="brand-title">CORUNEVA</h1>
       <p class="brand-subtitle">Klicke und erfahre mehr</p>
