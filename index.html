@@ -1,369 +1,346 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coruneva | Die Mitarbeitenden im Zentrum der Lösung</title>
-    <link rel="icon" type="image/png" href="Favicon_Coruneva-transparent.png">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORUNEVA – Digitales Organisationsgedächtnis</title>
+  <style>
+    :root {
+      --bg-color: #0b111e;
+      --node-bg: #131c2e;
+      --node-border: #1e2d4a;
+      --cyan-glow: #00f2fe;
+      --green-glow: #00e676;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --focus-ring: #ffe600; /* High Contrast Fokus-Farbe */
+    }
 
-        body {
-            background-color: #0b0f19;
-            color: #f3f4f6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-        /* Hintergrund-Canvas für dynamische Verbindungslinien */
-        #canvas-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
 
-        .container {
-            position: relative;
-            width: 100%;
-            max-width: 1200px;
-            height: 90vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-        }
+    /* Barrierefreiheits-Steuerung (Ansicht wechseln & Skip-Link) */
+    .a11y-nav {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 200;
+      display: flex;
+      gap: 10px;
+    }
 
-        /* Hauptlogo (Zentrum) */
-        .core-logo-wrapper {
-            position: absolute;
-            cursor: pointer;
-            text-align: center;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
-        }
+    .a11y-btn {
+      background: var(--node-bg);
+      color: var(--text-main);
+      border: 1px solid var(--node-border);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
 
-        .core-logo-wrapper:hover {
-            transform: scale(1.05);
-        }
+    .a11y-btn:focus, .node:focus, .close-btn:focus {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
 
-        .core-circle {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, #111827 0%, #07090e 100%);
-            border: 3px solid #00a8cc;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 40px rgba(0, 168, 204, 0.25);
-            margin: 0 auto 15px auto;
-            position: relative;
-            animation: pulse-glow 3s infinite alternate;
-            padding: 20px;
-        }
+    /* SVG Canvas für Verbindungslinien */
+    #svg-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 20px rgba(0, 168, 204, 0.2); border-color: #00a8cc; }
-            100% { box-shadow: 0 0 45px rgba(16, 185, 129, 0.4); border-color: #10b981; }
-        }
+    .line-path {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        .core-circle img {
-            max-width: 130px;
-            height: auto;
-            filter: drop-shadow(0 0 10px rgba(0,168,204,0.3));
-        }
+    /* Mind-Map Container */
+    .mindmap-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
 
-        .click-hint {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            letter-spacing: 1px;
-            background: rgba(15, 23, 42, 0.9);
-            padding: 6px 18px;
-            border-radius: 20px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            display: inline-block;
-        }
+    /* Pulsierendes Zentrum / Logo */
+    .center-node {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      z-index: 10;
+    }
 
-        /* Knotenpunkte (Sphären) Allgemein */
-        .node {
-            position: absolute;
-            background: #111827;
-            border: 2px solid #374151;
-            color: #f8fafc;
-            padding: 12px 24px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 5;
-            opacity: 0;
-            transform: scale(0);
-            pointer-events: none;
-            white-space: nowrap;
-        }
+    .logo-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #0d1627;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+      animation: pulse 3s infinite ease-in-out;
+    }
 
-        .node.active {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 25px rgba(0, 242, 254, 0.25); }
+      50% { box-shadow: 0 0 45px rgba(0, 242, 254, 0.5); }
+    }
 
-        .node:hover {
-            background: #1f2937;
-            border-color: #00a8cc;
-            color: #00a8cc;
-            box-shadow: 0 0 20px rgba(0, 168, 204, 0.4);
-        }
+    /* WICHTIG: Animationen & Pulsieren abschalten bei reduzierter Bewegung */
+    @media (prefers-reduced-motion: reduce) {
+      .logo-wrapper {
+        animation: none !important;
+      }
+      .line-path, .node, .subnode, .modal {
+        transition: none !important;
+      }
+    }
 
-        /* Modal / Detailfenster */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(11, 15, 25, 0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
+    .logo-img {
+      width: 85px;
+      height: 85px;
+      object-fit: contain;
+    }
 
-        .modal-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
+    .brand-title {
+      margin-top: 15px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
 
-        .modal-card {
-            background: #111827;
-            border: 1px solid #374151;
-            border-left: 4px solid #00a8cc;
-            width: 90%;
-            max-width: 550px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
+    .brand-subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
 
-        .modal-overlay.open .modal-card {
-            transform: translateY(0);
-        }
+    /* Mind-Map Knotenpunkte */
+    .node {
+      position: absolute;
+      background: var(--node-bg);
+      border: 1px solid var(--node-border);
+      color: var(--text-main);
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      z-index: 5;
+    }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+    .node:hover {
+      border-color: var(--cyan-glow);
+    }
 
-        .modal-title {
-            font-size: 1.4rem;
-            color: #ffffff;
-            font-weight: 700;
-        }
+    .subnode {
+      font-size: 13px;
+      padding: 8px 18px;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
 
-        .modal-close {
-            background: none;
-            border: none;
-            color: #9ca3af;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
+    .subnode.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
 
-        .modal-close:hover {
-            color: #ffffff;
-        }
+    /* Alternativansicht (Lineare Liste für Screenreader / Barrierefreiheit) */
+    .accessible-list {
+      display: none;
+      max-width: 800px;
+      width: 90%;
+      margin: 80px auto 40px auto;
+      z-index: 10;
+    }
 
-        .modal-body {
-            color: #d1d5db;
-            font-size: 1rem;
-            line-height: 1.6;
-            white-space: pre-line;
-        }
-    </style>
+    .accessible-list h1 { margin-bottom: 20px; font-size: 28px; }
+    .accessible-list ul { list-style: none; padding: 0; }
+    .accessible-list li { 
+      background: var(--node-bg); 
+      margin-bottom: 12px; 
+      padding: 16px; 
+      border-radius: 8px; 
+      border: 1px solid var(--node-border);
+    }
+    .accessible-list h2 { color: var(--cyan-glow); font-size: 18px; margin-bottom: 6px; }
+
+    /* Modal Dialog */
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #111a2e;
+      border: 1px solid var(--cyan-glow);
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 450px;
+      width: 90%;
+      z-index: 100;
+      display: none;
+    }
+
+    .modal.open { display: block; }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--cyan-glow); }
+    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+  </style>
 </head>
 <body>
 
-    <canvas id="canvas-bg"></canvas>
+  <!-- Barrierefreie Steuerungsleiste -->
+  <nav class="a11y-nav" aria-label="Barrierefreiheit">
+    <button class="a11y-btn" id="toggle-view-btn" aria-expanded="false">
+      Reine Textansicht aktivieren
+    </button>
+  </nav>
 
-    <div class="container">
-        <!-- Zentrum: Echtes Coruneva Logo & Start-Hinweis -->
-        <div class="core-logo-wrapper" id="core-logo" onclick="toggleFirstLevel()">
-            <div class="core-circle">
-                <img src="Logo_Coruneva-transparent.png" alt="Coruneva Logo">
-            </div>
-            <div class="click-hint">- Click to start your journey -</div>
-        </div>
+  <!-- SVG Overlay -->
+  <svg id="svg-canvas" aria-hidden="true"></svg>
 
-        <!-- 1. Stufe: Hauptmenü-Sphären -->
-        <div class="node" id="node-ueber" style="top: 22%; left: 28%;" onclick="toggleSecondLevel('ueber')">Über uns</div>
-        <div class="node" id="node-produkt" style="top: 22%; left: 62%;" onclick="openModal('Produkt', 'Hier entstehen demnächst Ihre Produkt-Sphären und Detaillierungen.')">Produkt</div>
-        <div class="node" id="node-preise" style="top: 72%; left: 28%;" onclick="openModal('Preise', 'Hier folgen in Kürze die Tarifmodelle und Preiskategorien.')">Preise</div>
-        <div class="node" id="node-kontakt" style="top: 72%; left: 62%;" onclick="toggleSecondLevel('kontakt')">Kontakt</div>
-        <div class="node" id="node-faq" style="top: 48%; left: 82%;" onclick="openModal('FAQ', 'Hier finden Sie bald Antworten auf die am häufigsten gestellten Fragen zu Coruneva.')">FAQ</div>
-
-        <!-- 2. Stufe: Unter-Sphären -->
-        <!-- Unter 'Über uns' -->
-        <div class="node sub-ueber" style="top: 8%; left: 15%;" onclick="openModal('Vision und Mission', 'Unsere Mission ist es, innovative Digitallösungen nahtlos und greifbar zu machen. Unsere Vision treibt uns an, Technologie mit menschlicher Interaktion in Einklang zu bringen.')">Vision und Mission</div>
-        
-        <!-- Unter 'Kontakt' -->
-        <div class="node sub-kontakt" style="top: 86%; left: 55%;" onclick="openModal('Impressum', 'Angaben gemäß § 5 TMG:\nCorneva UG (haftungsbeschränkt)\nBeispielstraße 1\n12345 Musterstadt')">Impressum</div>
-        <div class="node sub-kontakt" style="top: 86%; left: 78%;" onclick="openModal('Kontaktformular', 'Schreiben Sie uns direkt eine Nachricht an info@coruneva.de oder nutzen Sie unser integriertes Formular.')">Kontaktformular</div>
+  <!-- Mind-Map Ansicht -->
+  <main class="mindmap-container" id="mindmap-view" aria-label="Interaktive Mind-Map Navigation">
+    
+    <div class="center-node" id="center-node" tabindex="0" role="button" aria-label="Coruneva Hauptzentrum">
+      <div class="logo-wrapper">
+        <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo">
+      </div>
+      <h1 class="brand-title">CORUNEVA</h1>
+      <p class="brand-subtitle">Klicke und erfahre mehr</p>
     </div>
 
-    <!-- Modal Fenster -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Titel</h3>
-                <button class="modal-close" onclick="closeModalDirect()">&times;</button>
-            </div>
-            <div class="modal-body" id="modalText">
-                Inhalt...
-            </div>
-        </div>
+    <!-- Hauptknoten mit aria-attributes -->
+    <div class="node" id="node-uber-uns" style="top: 25%; left: 30%;" tabindex="0" role="button" aria-expanded="false">Über uns</div>
+    <div class="node" id="node-produkt" style="top: 25%; left: 70%;" tabindex="0" role="button">Produkt</div>
+    <div class="node" id="node-faq" style="top: 50%; left: 80%;" tabindex="0" role="button">FAQ</div>
+    <div class="node" id="node-kontakt" style="top: 75%; left: 70%;" tabindex="0" role="button" aria-expanded="false">Kontakt</div>
+    <div class="node" id="node-preise" style="top: 75%; left: 30%;" tabindex="0" role="button">Preise</div>
+
+    <!-- Unterknoten -->
+    <div class="node subnode" id="node-vision" style="top: 15%; left: 20%;" tabindex="0" role="button">Vision</div>
+    <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;" tabindex="0" role="button">Mission</div>
+    <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;" tabindex="0" role="button">Impressum</div>
+    <div class="node subnode" id="node-kontaktformular" style="top: 85%; left: 80%;" tabindex="0" role="button">Kontaktformular</div>
+
+  </main>
+
+  <!-- Barrierefreie Listenansicht (Standardmäßig ausgeblendet, per Klick aktivierbar) -->
+  <section class="accessible-list" id="accessible-list-view" aria-label="Textbasierte Inhaltsübersicht">
+    <h1>CORUNEVA – Inhaltsübersicht</h1>
+    <ul>
+      <li>
+        <h2>Unsere Vision</h2>
+        <p>Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse nahtlos vereint.</p>
+      </li>
+      <li>
+        <h2>Unsere Mission</h2>
+        <p>Wir befähigen Organisationen durch einen strukturierten 3-Schritte-Konsensprozess, echte Klarheit zu schaffen.</p>
+      </li>
+      <li>
+        <h2>Produkt</h2>
+        <p>Erfahre mehr über die 3 Ebenen von Coruneva: Befragungen, Teammatching und strategische Unternehmensanalyse.</p>
+      </li>
+      <li>
+        <h2>Preise</h2>
+        <p>Flexibel auf Ihre Unternehmensgröße angepasst. Kontaktieren Sie uns für ein Angebot.</p>
+      </li>
+      <li>
+        <h2>Kontakt & Impressum</h2>
+        <p>Nehmen Sie direkt mit uns Kontakt auf oder lesen Sie das Impressum.</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Modal Dialog -->
+  <div class="modal" id="info-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">Titel</h2>
+      <button class="close-btn" id="modal-close" aria-label="Fenster schließen">&times;</button>
     </div>
+    <div class="modal-body" id="modal-body">Inhalt...</div>
+  </div>
 
-    <script>
-        let isOpen = false;
-        let activeSub = null;
+  <script>
+    const toggleViewBtn = document.getElementById('toggle-view-btn');
+    const mindmapView = document.getElementById('mindmap-view');
+    const listView = document.getElementById('accessible-list-view');
+    const svgCanvas = document.getElementById('svg-canvas');
 
-        function toggleFirstLevel() {
-            isOpen = !isOpen;
-            const nodes = ['node-ueber', 'node-produkt', 'node-preise', 'node-kontakt', 'node-faq'];
-            
-            nodes.forEach(id => {
-                const el = document.getElementById(id);
-                if (isOpen) {
-                    el.classList.add('active');
-                } else {
-                    el.classList.remove('active');
-                    closeAllSubs();
-                }
-            });
-            drawLines();
+    // Barrierefreie Ansicht umschalten
+    toggleViewBtn.addEventListener('click', () => {
+      const isList = listView.style.display === 'block';
+      if (isList) {
+        listView.style.display = 'none';
+        mindmapView.style.display = 'flex';
+        svgCanvas.style.display = 'block';
+        toggleViewBtn.innerText = 'Reine Textansicht aktivieren';
+        toggleViewBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        listView.style.display = 'block';
+        mindmapView.style.display = 'none';
+        svgCanvas.style.display = 'none';
+        toggleViewBtn.innerText = 'Interaktive Mind-Map aktivieren';
+        toggleViewBtn.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    // Tastatur-Bedienung unterstützen (Enter / Space auf Knoten)
+    document.querySelectorAll('.node').forEach(node => {
+      node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          node.click();
         }
+      });
+    });
+  </script>
 
-        function toggleSecondLevel(category) {
-            closeAllSubs();
-
-            if (activeSub === category) {
-                activeSub = null;
-                return;
-            }
-
-            activeSub = category;
-            const subs = document.querySelectorAll('.sub-' + category);
-            subs.forEach(el => el.classList.add('active'));
-            drawLines();
-        }
-
-        function closeAllSubs() {
-            document.querySelectorAll('[class*="sub-"]').forEach(el => {
-                el.classList.remove('active');
-            });
-            activeSub = null;
-            drawLines();
-        }
-
-        function openModal(title, text) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalText').innerText = text;
-            document.getElementById('modalOverlay').classList.add('open');
-        }
-
-        function closeModal(e) {
-            if (e.target.id === 'modalOverlay') {
-                document.getElementById('modalOverlay').classList.remove('open');
-            }
-        }
-
-        function closeModalDirect() {
-            document.getElementById('modalOverlay').classList.remove('open');
-        }
-
-        // Canvas Verbindungslinien dynamisch zeichnen
-        function drawLines() {
-            const canvas = document.getElementById('canvas-bg');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(0, 168, 204, 0.25)';
-            ctx.lineWidth = 1.5;
-
-            const core = document.getElementById('core-logo').getBoundingClientRect();
-            const coreX = core.left + core.width / 2;
-            const coreY = core.top + core.height / 2;
-
-            const mainNodes = ['node-ueber', 'node-produkt', 'node-preise', 'node-kontakt', 'node-faq'];
-            
-            mainNodes.forEach(id => {
-                const el = document.getElementById(id);
-                if (el.classList.contains('active')) {
-                    const rect = el.getBoundingClientRect();
-                    const nodeX = rect.left + rect.width / 2;
-                    const nodeY = rect.top + rect.height / 2;
-
-                    ctx.beginPath();
-                    ctx.moveTo(coreX, coreY);
-                    ctx.lineTo(nodeX, nodeY);
-                    ctx.stroke();
-                }
-            });
-
-            // Linien zu Unterknoten
-            const subNodes = document.querySelectorAll('[class*="sub-"]');
-            subNodes.forEach(el => {
-                if (el.classList.contains('active')) {
-                    let parentId = '';
-                    if (el.classList.contains('sub-ueber')) parentId = 'node-ueber';
-                    if (el.classList.contains('sub-kontakt')) parentId = 'node-kontakt';
-
-                    if (parentId) {
-                        const parentEl = document.getElementById(parentId);
-                        const pRect = parentEl.getBoundingClientRect();
-                        const pX = pRect.left + pRect.width / 2;
-                        const pY = pRect.top + pRect.height / 2;
-
-                        const rect = el.getBoundingClientRect();
-                        const nodeX = rect.left + rect.width / 2;
-                        const nodeY = rect.top + rect.height / 2;
-
-                        ctx.beginPath();
-                        ctx.moveTo(pX, pY);
-                        ctx.lineTo(nodeX, nodeY);
-                        ctx.stroke();
-                    }
-                }
-            });
-        }
-
-        window.addEventListener('resize', drawLines);
-    </script>
 </body>
 </html>
