@@ -93,7 +93,7 @@
       z-index: 2;
     }
 
-    /* ZENTRUM: Transparentes Logo mit Aura-Glow & exaktem Textstil */
+    /* ZENTRUM: Transparentes Logo mit Aura-Glow & Slogan */
     .center-node {
       position: absolute;
       display: flex;
@@ -146,11 +146,11 @@
     }
 
     .brand-subtitle {
-      margin-top: 5px;
+      margin-top: 6px;
       font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 400;
-      letter-spacing: 1px;
+      color: var(--cyan-glow);
+      font-weight: 600;
+      letter-spacing: 0.8px;
       text-align: center;
     }
 
@@ -258,32 +258,32 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- ZENTRUM: Logo & Titel -->
+    <!-- ZENTRUM: Logo & Slogan -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
         <img class="logo-img" src="Logo_Coruneva_ohne_Text_transparent.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva - ohne Text.png';">
       </div>
       <h1 class="brand-title">CORUNEVA</h1>
-      <p class="brand-subtitle">Klicke und erfahre mehr</p>
+      <p class="brand-subtitle">Mitarbeiterbedürfnisse verstehen. Organisationen weiterbringen.</p>
     </div>
 
     <!-- Hauptknoten -->
     <div class="node main-node" id="node-uber-uns" style="top: 25%; left: 30%;">
       <div class="label-text">Über uns</div>
       <div class="card-title">Über uns</div>
-      <div class="card-text">Wir machen sichtbar, was Menschen bei der Arbeit brauchen, und helfen Führungskräften, fundierte Entscheidungen zu treffen[cite: 22].</div>
+      <div class="card-text">Führung basiert nicht auf Vermutungen, sondern auf wissenschaftlichen Erkenntnissen und echtem Verständnis für Menschen[cite: 22].</div>
     </div>
 
     <div class="node main-node" id="node-produkt" style="top: 25%; left: 70%;">
       <div class="label-text">Produkt</div>
       <div class="card-title">Das Organisationsgedächtnis</div>
-      <div class="card-text">Die Plattform verbindet Mitarbeiterbedürfnisse (SDT), Unternehmensrealität und organisationales Lernen zu einem geschlossenen Lernkreislauf[cite: 22, 30].</div>
+      <div class="card-text">Die Plattform verbindet Mitarbeiterbedürfnisse (SDT), Unternehmensrealität und organisationales Lernen zu einem geschlossenen Kreislauf[cite: 22, 30].</div>
     </div>
 
     <div class="node main-node" id="node-faq" style="top: 50%; left: 80%;">
       <div class="label-text">FAQ</div>
       <div class="card-title">Häufige Fragen</div>
-      <div class="card-text">Erfahren Sie mehr über den strukturierten Konsensprozess, den Messrhythmus und den Datenschutz.</div>
+      <div class="card-text">Erfahren Sie mehr über Befragungszyklen, den Konsensprozess und datengestützte Evidenz.</div>
     </div>
 
     <div class="node main-node" id="node-kontakt" style="top: 75%; left: 70%;">
@@ -302,13 +302,13 @@
     <div class="node subnode" id="node-vision" style="top: 15%; left: 15%;">
       <div class="label-text">Vision</div>
       <div class="card-title">Unsere Vision</div>
-      <div class="card-text">Führung basiert nicht auf Vermutungen, sondern auf wissenschaftlichen Erkenntnissen und echtem Verständnis für Menschen[cite: 22].</div>
+      <div class="card-text">Wir schaffen eine Arbeitswelt, in der Führung auf einem echten Verständnis für menschliche Bedürfnisse basiert[cite: 22].</div>
     </div>
 
     <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;">
       <div class="label-text">Mission</div>
       <div class="card-title">Unsere Mission</div>
-      <div class="card-text">Wir verbinden Motivationsforschung und Unternehmensrealität für wirksame Führung und nachhaltige Leistung[cite: 22].</div>
+      <div class="card-text">Wir machen sichtbar, was Menschen bei der Arbeit brauchen, und leiten daraus wirksame Entscheidungen ab[cite: 22].</div>
     </div>
 
     <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;">
@@ -328,11 +328,11 @@
   <section class="accessible-list" id="accessible-list-view">
     <h1>CORUNEVA – Inhaltsübersicht</h1>
     <ul>
-      <li><h2>Unsere Vision</h2><p>Führung basiert auf wissenschaftlichen Erkenntnissen und echtem Verständnis für Menschen[cite: 22].</p></li>
-      <li><h2>Unsere Mission</h2><p>Wir machen sichtbar, was Menschen bei der Arbeit brauchen[cite: 22].</p></li>
-      <li><h2>Produkt</h2><p>Das digitale Organisationsgedächtnis und die Evidenz-Engine für wirksame Maßnahmen[cite: 26, 27].</p></li>
+      <li><h2>Unsere Vision</h2><p>Führung basierend auf echtem Verständnis für Menschen[cite: 22].</p></li>
+      <li><h2>Unsere Mission</h2><p>Mitarbeiterbedürfnisse sichtbar machen und wirksame Maßnahmen ableiten[cite: 22].</p></li>
+      <li><h2>Produkt</h2><p>Das digitale Organisationsgedächtnis und die Evidenz-Engine[cite: 26, 27].</p></li>
       <li><h2>Preise</h2><p>Flexibel auf Unternehmensgröße angepasst.</p></li>
-      <li><h2>FAQ</h2><p>Fragen zu Befragungszyklen, Datenschutz und Konsensworkshops.</p></li>
+      <li><h2>FAQ</h2><p>Fragen zu Befragungszyklen und Konsensworkshops.</p></li>
     </ul>
   </section>
 
@@ -423,7 +423,7 @@
       activeLevel2ChildId = null;
     }
 
-    // Linien bei Browser-Zoom oder Resize automatisch stabil halten
+    // Linien bei Browser-Zoom oder Resize stabil halten
     window.addEventListener('resize', () => {
       if (activeLevel1ParentId && activeLevel1ChildId) {
         if (activeLevel1Path) activeLevel1Path.remove();
