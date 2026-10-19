@@ -107,8 +107,8 @@
 
     .logo-wrapper {
       position: relative;
-      width: 180px;
-      height: 180px;
+      width: 170px;
+      height: 170px;
       border-radius: 50%;
       background: #080d16;
       display: flex;
@@ -117,6 +117,7 @@
       box-shadow: 0 0 45px rgba(0, 242, 254, 0.4), 0 0 85px rgba(0, 230, 118, 0.2);
       animation: pulse-aura 3.5s infinite ease-in-out;
       border: 2px solid rgba(0, 242, 254, 0.4);
+      overflow: hidden;
     }
 
     @keyframes pulse-aura {
@@ -129,8 +130,8 @@
     }
 
     .logo-img {
-      width: 130px;
-      height: 130px;
+      width: 120px;
+      height: 120px;
       object-fit: contain;
     }
 
@@ -258,7 +259,8 @@
     <!-- ZENTRUM: Logo & Beschriftung -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
-        <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva_transparent.png';">
+        <!-- Falls du das reine C-Symbol ohne Text als Bild hast (empfohlen), lade es als Logo_C_Only.png hoch -->
+        <img class="logo-img" src="Logo_C_Only.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva_transparent.png';">
       </div>
       <h1 class="brand-title">CORUNEVA</h1>
       <p class="brand-subtitle">Klicke und erfahre mehr</p>
@@ -349,7 +351,6 @@
       return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     }
 
-    /* LINIE ANIMIERT JETZT VOM PARENT (ZENTRUM/LOGO) ZUM CHILD (KNOTENPUNKT) */
     function createPath(parentId, childId) {
       const parent = document.getElementById(parentId);
       const child = document.getElementById(childId);
@@ -359,7 +360,6 @@
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const dx = c.x - p.x;
       
-      // Startet bei p (Logo) und fuehrt zu c (Aussenpunkt)
       const d = `M ${p.x} ${p.y} C ${p.x + dx * 0.5} ${p.y}, ${p.x + dx * 0.5} ${c.y}, ${c.x} ${c.y}`;
       
       path.setAttribute('d', d);
@@ -426,7 +426,6 @@
         node.classList.add('active');
 
         activeLevel1Path = removePath(activeLevel1Path);
-        // Erzeugt Linie vom Zentrum zum Hauptknoten
         activeLevel1Path = createPath('center-node', id);
 
         if (id === 'node-uber-uns') {
@@ -457,7 +456,6 @@
         sub.classList.add('expanded');
 
         const parentId = (id === 'node-vision' || id === 'node-mission') ? 'node-uber-uns' : 'node-kontakt';
-        // Erzeugt Linie vom Hauptknoten zum Unterknoten
         activeLevel2Path = createPath(parentId, id);
       });
     });
