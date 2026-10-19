@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CORUNEVA – Digitales Organisationsgedächtnis</title>
+  <title>CORUNEVA – Mitarbeiterbedürfnisse verstehen. Organisationen weiterbringen.</title>
   <style>
     :root {
       --bg-color: #060a12;
@@ -93,7 +93,7 @@
       z-index: 2;
     }
 
-    /* ZENTRUM: Transparentes Logo mit Aura-Glow & Slogan */
+    /* ZENTRUM: Logo, Titel, Slogan & Call-to-Action */
     .center-node {
       position: absolute;
       display: flex;
@@ -151,6 +151,15 @@
       color: var(--cyan-glow);
       font-weight: 600;
       letter-spacing: 0.8px;
+      text-align: center;
+    }
+
+    .brand-cta {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 0.5px;
       text-align: center;
     }
 
@@ -229,7 +238,8 @@
       z-index: 10;
     }
 
-    .accessible-list h1 { margin-bottom: 20px; font-size: 28px; }
+    .accessible-list h1 { margin-bottom: 8px; font-size: 28px; }
+    .accessible-list .a11y-slogan { color: var(--cyan-glow); font-size: 14px; margin-bottom: 24px; font-weight: 600; letter-spacing: 0.5px; }
     .accessible-list ul { list-style: none; padding: 0; }
     .accessible-list li { 
       background: var(--node-bg); 
@@ -258,57 +268,58 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- ZENTRUM: Logo & Slogan -->
+    <!-- ZENTRUM: Logo, Slogan und Klick-Hinweis -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
         <img class="logo-img" src="Logo_Coruneva_ohne_Text_transparent.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva - ohne Text.png';">
       </div>
       <h1 class="brand-title">CORUNEVA</h1>
       <p class="brand-subtitle">Mitarbeiterbedürfnisse verstehen. Organisationen weiterbringen.</p>
+      <p class="brand-cta">Klicke und erfahre mehr</p>
     </div>
 
     <!-- Hauptknoten -->
     <div class="node main-node" id="node-uber-uns" style="top: 25%; left: 30%;">
       <div class="label-text">Über uns</div>
       <div class="card-title">Über uns</div>
-      <div class="card-text">Führung basiert nicht auf Vermutungen, sondern auf wissenschaftlichen Erkenntnissen und echtem Verständnis für Menschen[cite: 22].</div>
+      <div class="card-text">Wir sind davon überzeugt, dass moderne Führung auf tiefem Empathieverständnis und fundierten Einsichten aufbauen muss. Unser Ziel ist es, ein digitales Fundament zu schaffen, das die reale Situation von Teams greifbar macht und blinde Flecken in der Unternehmensführung eliminiert.</div>
     </div>
 
     <div class="node main-node" id="node-produkt" style="top: 25%; left: 70%;">
       <div class="label-text">Produkt</div>
       <div class="card-title">Das Organisationsgedächtnis</div>
-      <div class="card-text">Die Plattform verbindet Mitarbeiterbedürfnisse (SDT), Unternehmensrealität und organisationales Lernen zu einem geschlossenen Kreislauf[cite: 22, 30].</div>
+      <div class="card-text">Unsere intelligente Plattform verbindet die psychologischen Grundbedürfnisse von Mitarbeitenden nahtlos mit den wirtschaftlichen Rahmenbedingungen des Unternehmens. Durch die Verknüpfung von wissenschaftlichen Erkenntnissen und historischen Erfahrungswerten entsteht ein lernendes System für nachhaltige Organisationsentwicklung.</div>
     </div>
 
     <div class="node main-node" id="node-faq" style="top: 50%; left: 80%;">
       <div class="label-text">FAQ</div>
       <div class="card-title">Häufige Fragen</div>
-      <div class="card-text">Erfahren Sie mehr über Befragungszyklen, den Konsensprozess und datengestützte Evidenz.</div>
+      <div class="card-text">Hier finden Sie transparente Antworten zu unseren Befragungszyklen, dem strukturierten Konsensprozess und höchsten Datenschutzstandards.</div>
     </div>
 
     <div class="node main-node" id="node-kontakt" style="top: 75%; left: 70%;">
       <div class="label-text">Kontakt</div>
       <div class="card-title">Kontakt aufnehmen</div>
-      <div class="card-text">Sprechen Sie mit unserem Team für Demos, Implementierung oder Partnerschaften.</div>
+      <div class="card-text">Sprechen Sie mit unserem Expertenteam für individuelle Demos, strategische Partnerschaften oder Begleitung bei der Einführung.</div>
     </div>
 
     <div class="node main-node" id="node-preise" style="top: 75%; left: 30%;">
       <div class="label-text">Preise</div>
       <div class="card-title">Preise & Modelle</div>
-      <div class="card-text">Flexibel auf Ihre Unternehmensgröße und Reifegrad angepasst. Kontaktieren Sie uns für ein Angebot.</div>
+      <div class="card-text">Unsere Lizenzmodelle sind flexibel auf die spezifische Größe und den individuellen Reifegrad Ihrer Organisation zugeschnitten.</div>
     </div>
 
     <!-- Unterpunkte -->
     <div class="node subnode" id="node-vision" style="top: 15%; left: 15%;">
       <div class="label-text">Vision</div>
       <div class="card-title">Unsere Vision</div>
-      <div class="card-text">Wir schaffen eine Arbeitswelt, in der Führung auf einem echten Verständnis für menschliche Bedürfnisse basiert[cite: 22].</div>
+      <div class="card-text">Wir streben nach einer Arbeitswelt, in der Führungskräfte nicht länger auf Bauchgefühl oder Annahmen vertrauen müssen. Durch ein echtes und messbares Verständnis der menschlichen Bedürfnisse schaffen wir Arbeitsumgebungen, in denen sich jedes Talent optimal entfalten kann.</div>
     </div>
 
     <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;">
       <div class="label-text">Mission</div>
       <div class="card-title">Unsere Mission</div>
-      <div class="card-text">Wir machen sichtbar, was Menschen bei der Arbeit brauchen, und leiten daraus wirksame Entscheidungen ab[cite: 22].</div>
+      <div class="card-text">Wir machen verborgene Potenziale und Bedürfnisse im Arbeitsalltag sichtbar und unterstützen Führungskräfte dabei, daraus direkt wirksame und passgenaue Entscheidungen für ihr Unternehmen abzuleiten.</div>
     </div>
 
     <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;">
@@ -320,19 +331,39 @@
     <div class="node subnode" id="node-kontaktformular" style="top: 85%; left: 80%;">
       <div class="label-text">Kontaktformular</div>
       <div class="card-title">Direktnachricht</div>
-      <div class="card-text">Schreiben Sie uns eine Nachricht, um ein Beratungsgespräch zu vereinbaren.</div>
+      <div class="card-text">Schreiben Sie uns eine Nachricht, um ein unverbindliches Beratungsgespräch zu vereinbaren.</div>
     </div>
 
   </div>
 
   <section class="accessible-list" id="accessible-list-view">
-    <h1>CORUNEVA – Inhaltsübersicht</h1>
+    <h1>CORUNEVA</h1>
+    <p class="a11y-slogan">Mitarbeiterbedürfnisse verstehen. Organisationen weiterbringen.</p>
     <ul>
-      <li><h2>Unsere Vision</h2><p>Führung basierend auf echtem Verständnis für Menschen[cite: 22].</p></li>
-      <li><h2>Unsere Mission</h2><p>Mitarbeiterbedürfnisse sichtbar machen und wirksame Maßnahmen ableiten[cite: 22].</p></li>
-      <li><h2>Produkt</h2><p>Das digitale Organisationsgedächtnis und die Evidenz-Engine[cite: 26, 27].</p></li>
-      <li><h2>Preise</h2><p>Flexibel auf Unternehmensgröße angepasst.</p></li>
-      <li><h2>FAQ</h2><p>Fragen zu Befragungszyklen und Konsensworkshops.</p></li>
+      <li>
+        <h2>Über uns</h2>
+        <p>Wir schaffen ein digitales Fundament, das die reale Situation von Teams greifbar macht und moderne Führung mit echtem Empathieverständnis verbindet.</p>
+      </li>
+      <li>
+        <h2>Unsere Vision</h2>
+        <p>Eine Arbeitswelt gestalten, in der Führung auf messbarem Verständnis menschlicher Bedürfnisse basiert und Menschen ihr volles Potenzial entfalten können.</p>
+      </li>
+      <li>
+        <h2>Unsere Mission</h2>
+        <p>Verborgene Bedürfnisse im Arbeitsalltag sichtbar machen und Führungskräfte befähigen, fundierte und wirksame Entscheidungen abzuleiten.</p>
+      </li>
+      <li>
+        <h2>Produkt & Organisationsgedächtnis</h2>
+        <p>Eine intelligente Plattform, die psychologische Mitarbeiterbedürfnisse, Unternehmensrealität und organisationales Lernen zu einem geschlossenen Kreislauf verknüpft.</p>
+      </li>
+      <li>
+        <h2>Preise & Modelle</h2>
+        <p>Flexible Lösungen, passgenau auf die Größe und den Reifegrad Ihrer Organisation angepasst.</p>
+      </li>
+      <li>
+        <h2>FAQ</h2>
+        <p>Informationen zu Befragungszyklen, Konsensprozessen und umfassendem Datenschutz.</p>
+      </li>
     </ul>
   </section>
 
@@ -493,6 +524,8 @@
       });
     });
 
+    toggleViewBtn.innerText = 'Textansicht (Barrierefrei)';
+    
     toggleViewBtn.addEventListener('click', () => {
       const isList = listView.style.display === 'block';
       if (isList) {
@@ -500,11 +533,13 @@
         mindmapView.style.display = 'flex';
         svgCanvas.style.display = 'block';
         toggleViewBtn.innerText = 'Textansicht (Barrierefrei)';
+        document.title = 'CORUNEVA – Mitarbeiterbedürfnisse verstehen. Organisationen weiterbringen.';
       } else {
         listView.style.display = 'block';
         mindmapView.style.display = 'none';
         svgCanvas.style.display = 'none';
         toggleViewBtn.innerText = 'Mind-Map Ansicht';
+        document.title = 'CORUNEVA – Inhaltsübersicht';
       }
     });
   </script>
