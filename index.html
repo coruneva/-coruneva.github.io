@@ -75,7 +75,7 @@
       stroke-width: 2.5;
       stroke-linecap: round;
       opacity: 0;
-      transition: stroke-dashoffset 0.4s ease-in-out, opacity 0.3s ease;
+      transition: stroke-dashoffset 0.45s ease-out, opacity 0.3s ease;
     }
 
     .line-path.visible {
@@ -93,7 +93,7 @@
       z-index: 2;
     }
 
-    /* ZENTRUM: Sauber platziertes Logo mit Aura */
+    /* ZENTRUM: Logo mit sanftem Aura-Glow */
     .center-node {
       position: absolute;
       display: flex;
@@ -105,44 +105,50 @@
       user-select: none;
     }
 
-    .logo-aura-wrapper {
+    .logo-wrapper {
       position: relative;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: #080d16;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 30px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 242, 254, 0.25) 0%, rgba(0, 230, 118, 0.15) 55%, transparent 75%);
-      box-shadow: 0 0 60px rgba(0, 242, 254, 0.3), 0 0 100px rgba(0, 230, 118, 0.15);
-      animation: pulseAura 3.5s infinite ease-in-out;
+      box-shadow: 0 0 45px rgba(0, 242, 254, 0.4), 0 0 85px rgba(0, 230, 118, 0.2);
+      animation: pulse-aura 3.5s infinite ease-in-out;
+      border: 2px solid rgba(0, 242, 254, 0.4);
     }
 
-    @keyframes pulseAura {
+    @keyframes pulse-aura {
       0%, 100% {
-        box-shadow: 0 0 50px rgba(0, 242, 254, 0.25), 0 0 80px rgba(0, 230, 118, 0.12);
-        transform: scale(1);
+        box-shadow: 0 0 35px rgba(0, 242, 254, 0.3), 0 0 70px rgba(0, 230, 118, 0.15);
       }
       50% {
-        box-shadow: 0 0 85px rgba(0, 242, 254, 0.45), 0 0 130px rgba(0, 230, 118, 0.25);
-        transform: scale(1.02);
+        box-shadow: 0 0 65px rgba(0, 242, 254, 0.6), 0 0 110px rgba(0, 230, 118, 0.35);
       }
     }
 
     .logo-img {
-      width: 220px;
-      height: auto;
-      display: block;
-      filter: drop-shadow(0 0 12px rgba(0, 242, 254, 0.3));
+      width: 130px;
+      height: 130px;
+      object-fit: contain;
+    }
+
+    .brand-title {
+      margin-top: 16px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      color: #ffffff;
+      text-transform: uppercase;
     }
 
     .brand-subtitle {
-      margin-top: 8px;
-      font-size: 14px;
+      margin-top: 4px;
+      font-size: 13px;
       color: var(--text-muted);
       font-weight: 400;
       letter-spacing: 0.5px;
-      text-align: center;
     }
 
     /* Mind-Map Knotenpunkte */
@@ -249,11 +255,12 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- ZENTRUM: Sauber platziertes Logo -->
+    <!-- ZENTRUM: Logo & Beschriftung -->
     <div class="center-node" id="center-node">
-      <div class="logo-aura-wrapper">
-        <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo">
+      <div class="logo-wrapper">
+        <img class="logo-img" src="Logo_Nocobase.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva_transparent.png';">
       </div>
+      <h1 class="brand-title">CORUNEVA</h1>
       <p class="brand-subtitle">Klicke und erfahre mehr</p>
     </div>
 
@@ -342,6 +349,7 @@
       return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     }
 
+    /* LINIE ANIMIERT JETZT VOM PARENT (ZENTRUM/LOGO) ZUM CHILD (KNOTENPUNKT) */
     function createPath(parentId, childId) {
       const parent = document.getElementById(parentId);
       const child = document.getElementById(childId);
@@ -350,6 +358,8 @@
 
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const dx = c.x - p.x;
+      
+      // Startet bei p (Logo) und fuehrt zu c (Aussenpunkt)
       const d = `M ${p.x} ${p.y} C ${p.x + dx * 0.5} ${p.y}, ${p.x + dx * 0.5} ${c.y}, ${c.x} ${c.y}`;
       
       path.setAttribute('d', d);
@@ -416,6 +426,7 @@
         node.classList.add('active');
 
         activeLevel1Path = removePath(activeLevel1Path);
+        // Erzeugt Linie vom Zentrum zum Hauptknoten
         activeLevel1Path = createPath('center-node', id);
 
         if (id === 'node-uber-uns') {
@@ -446,6 +457,7 @@
         sub.classList.add('expanded');
 
         const parentId = (id === 'node-vision' || id === 'node-mission') ? 'node-uber-uns' : 'node-kontakt';
+        // Erzeugt Linie vom Hauptknoten zum Unterknoten
         activeLevel2Path = createPath(parentId, id);
       });
     });
