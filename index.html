@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CORUNEVA – Empowering companies & people</title>
+  <title>CORUNEVA – Digitales Organisationsgedächtnis</title>
   <style>
     :root {
       --bg-color: #060a12;
@@ -63,8 +63,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 1;
     }
@@ -105,7 +105,7 @@
       user-select: none;
     }
 
-    .logo-aura-wrapper {
+    .logo-wrapper {
       position: relative;
       width: 180px;
       height: 180px;
@@ -134,7 +134,6 @@
       object-fit: contain;
     }
 
-    /* Textstil exakt wie im Original-Logo (groß, weites Letter-Spacing) */
     .brand-title {
       margin-top: 20px;
       font-size: 30px;
@@ -259,7 +258,7 @@
 
   <div class="mindmap-container" id="mindmap-view">
     
-    <!-- ZENTRUM: Transparentes Logo & originalgetreuer Textstil -->
+    <!-- ZENTRUM: Logo & Titel -->
     <div class="center-node" id="center-node">
       <div class="logo-wrapper">
         <img class="logo-img" src="Logo_Coruneva_ohne_Text_transparent.png" alt="CORUNEVA Logo" onerror="this.src='Logo_Coruneva - ohne Text.png';">
@@ -272,44 +271,44 @@
     <div class="node main-node" id="node-uber-uns" style="top: 25%; left: 30%;">
       <div class="label-text">Über uns</div>
       <div class="card-title">Über uns</div>
-      <div class="card-text">Erfahre mehr über Coruneva, unsere Philosophie und was uns antreibt.</div>
+      <div class="card-text">Wir machen sichtbar, was Menschen bei der Arbeit brauchen, und helfen Führungskräften, fundierte Entscheidungen zu treffen[cite: 22].</div>
     </div>
 
     <div class="node main-node" id="node-produkt" style="top: 25%; left: 70%;">
       <div class="label-text">Produkt</div>
-      <div class="card-title">Coruneva Plattform</div>
-      <div class="card-text">Erfahre mehr über die 3 Ebenen von Coruneva: Von der Befragung der Mitarbeitenden über das Teammatching bis hin zur strategischen Unternehmensanalyse.</div>
+      <div class="card-title">Das Organisationsgedächtnis</div>
+      <div class="card-text">Die Plattform verbindet Mitarbeiterbedürfnisse (SDT), Unternehmensrealität und organisationales Lernen zu einem geschlossenen Lernkreislauf[cite: 22, 30].</div>
     </div>
 
     <div class="node main-node" id="node-faq" style="top: 50%; left: 80%;">
       <div class="label-text">FAQ</div>
       <div class="card-title">Häufige Fragen</div>
-      <div class="card-text">Hier finden Sie Antworten zu Datenschutz (DSGVO), Integrationen und dem Ablauf von Konsensworkshops.</div>
+      <div class="card-text">Erfahren Sie mehr über den strukturierten Konsensprozess, den Messrhythmus und den Datenschutz.</div>
     </div>
 
     <div class="node main-node" id="node-kontakt" style="top: 75%; left: 70%;">
       <div class="label-text">Kontakt</div>
       <div class="card-title">Kontakt aufnehmen</div>
-      <div class="card-text">Sprechen Sie mit unserem Team für Demos, Partneranfragen oder Unterstützung.</div>
+      <div class="card-text">Sprechen Sie mit unserem Team für Demos, Implementierung oder Partnerschaften.</div>
     </div>
 
     <div class="node main-node" id="node-preise" style="top: 75%; left: 30%;">
       <div class="label-text">Preise</div>
       <div class="card-title">Preise & Modelle</div>
-      <div class="card-text">Flexibel auf Ihre Unternehmensgröße angepasst. Kontaktieren Sie uns für ein individuelles Angebot.</div>
+      <div class="card-text">Flexibel auf Ihre Unternehmensgröße und Reifegrad angepasst. Kontaktieren Sie uns für ein Angebot.</div>
     </div>
 
     <!-- Unterpunkte -->
     <div class="node subnode" id="node-vision" style="top: 15%; left: 15%;">
       <div class="label-text">Vision</div>
       <div class="card-title">Unsere Vision</div>
-      <div class="card-text">Unsere Vision ist es, Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse nahtlos vereint.</div>
+      <div class="card-text">Führung basiert nicht auf Vermutungen, sondern auf wissenschaftlichen Erkenntnissen und echtem Verständnis für Menschen[cite: 22].</div>
     </div>
 
     <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;">
       <div class="label-text">Mission</div>
       <div class="card-title">Unsere Mission</div>
-      <div class="card-text">Wir befähigen Organisationen durch einen strukturierten 3-Schritte-Konsensprozess, echte Klarheit zu schaffen und nachhaltige Entwicklung messbar zu machen.</div>
+      <div class="card-text">Wir verbinden Motivationsforschung und Unternehmensrealität für wirksame Führung und nachhaltige Leistung[cite: 22].</div>
     </div>
 
     <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;">
@@ -329,11 +328,11 @@
   <section class="accessible-list" id="accessible-list-view">
     <h1>CORUNEVA – Inhaltsübersicht</h1>
     <ul>
-      <li><h2>Unsere Vision</h2><p>Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse vereint.</p></li>
-      <li><h2>Unsere Mission</h2><p>Organisationen durch einen 3-Schritte-Konsensprozess befähigen.</p></li>
-      <li><h2>Produkt</h2><p>Die 3 Ebenen von Coruneva: Mitarbeitende, Team und strategische Unternehmensanalyse.</p></li>
+      <li><h2>Unsere Vision</h2><p>Führung basiert auf wissenschaftlichen Erkenntnissen und echtem Verständnis für Menschen[cite: 22].</p></li>
+      <li><h2>Unsere Mission</h2><p>Wir machen sichtbar, was Menschen bei der Arbeit brauchen[cite: 22].</p></li>
+      <li><h2>Produkt</h2><p>Das digitale Organisationsgedächtnis und die Evidenz-Engine für wirksame Maßnahmen[cite: 26, 27].</p></li>
       <li><h2>Preise</h2><p>Flexibel auf Unternehmensgröße angepasst.</p></li>
-      <li><h2>FAQ</h2><p>Fragen zu Datenschutz (DSGVO) und Konsensworkshops.</p></li>
+      <li><h2>FAQ</h2><p>Fragen zu Befragungszyklen, Datenschutz und Konsensworkshops.</p></li>
     </ul>
   </section>
 
@@ -345,24 +344,33 @@
     const listView = document.getElementById('accessible-list-view');
 
     let isRevealed = false;
+    let activeLevel1ParentId = null;
+    let activeLevel1ChildId = null;
+    let activeLevel2ParentId = null;
+    let activeLevel2ChildId = null;
+    
     let activeLevel1Path = null;
     let activeLevel2Path = null;
 
     function getCenterCoords(el) {
       const rect = el.getBoundingClientRect();
-      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      const svgRect = svgCanvas.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2 - svgRect.left,
+        y: rect.top + rect.height / 2 - svgRect.top
+      };
     }
 
-    /* Linien animieren vom Zentrum (Logo) zum jeweiligen Knotenpunkt */
     function createPath(parentId, childId) {
       const parent = document.getElementById(parentId);
       const child = document.getElementById(childId);
+      if (!parent || !child) return null;
+
       const p = getCenterCoords(parent);
       const c = getCenterCoords(child);
 
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       const dx = c.x - p.x;
-      
       const d = `M ${p.x} ${p.y} C ${p.x + dx * 0.5} ${p.y}, ${p.x + dx * 0.5} ${c.y}, ${c.x} ${c.y}`;
       
       path.setAttribute('d', d);
@@ -396,6 +404,8 @@
     function closeSubnodes() {
       document.querySelectorAll('.subnode').forEach(n => n.classList.remove('revealed'));
       activeLevel2Path = removePath(activeLevel2Path);
+      activeLevel2ParentId = null;
+      activeLevel2ChildId = null;
     }
 
     function closeAll() {
@@ -407,7 +417,23 @@
       });
       activeLevel1Path = removePath(activeLevel1Path);
       activeLevel2Path = removePath(activeLevel2Path);
+      activeLevel1ParentId = null;
+      activeLevel1ChildId = null;
+      activeLevel2ParentId = null;
+      activeLevel2ChildId = null;
     }
+
+    // Linien bei Browser-Zoom oder Resize automatisch stabil halten
+    window.addEventListener('resize', () => {
+      if (activeLevel1ParentId && activeLevel1ChildId) {
+        if (activeLevel1Path) activeLevel1Path.remove();
+        activeLevel1Path = createPath(activeLevel1ParentId, activeLevel1ChildId);
+      }
+      if (activeLevel2ParentId && activeLevel2ChildId) {
+        if (activeLevel2Path) activeLevel2Path.remove();
+        activeLevel2Path = createPath(activeLevel2ParentId, activeLevel2ChildId);
+      }
+    });
 
     centerNode.addEventListener('click', () => {
       if (!isRevealed) {
@@ -429,7 +455,9 @@
         node.classList.add('active');
 
         activeLevel1Path = removePath(activeLevel1Path);
-        activeLevel1Path = createPath('center-node', id);
+        activeLevel1ParentId = 'center-node';
+        activeLevel1ChildId = id;
+        activeLevel1Path = createPath(activeLevel1ParentId, activeLevel1ChildId);
 
         if (id === 'node-uber-uns') {
           setTimeout(() => {
@@ -459,7 +487,9 @@
         sub.classList.add('expanded');
 
         const parentId = (id === 'node-vision' || id === 'node-mission') ? 'node-uber-uns' : 'node-kontakt';
-        activeLevel2Path = createPath(parentId, id);
+        activeLevel2ParentId = parentId;
+        activeLevel2ChildId = id;
+        activeLevel2Path = createPath(activeLevel2ParentId, activeLevel2ChildId);
       });
     });
 
