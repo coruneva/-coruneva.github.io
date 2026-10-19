@@ -6,13 +6,13 @@
   <title>CORUNEVA – Digitales Organisationsgedächtnis</title>
   <style>
     :root {
-      --bg-color: #0b111e;
-      --node-bg: #131c2e;
-      --node-border: #1e2d4a;
-      --cyan-glow: #00f2fe;
-      --green-glow: #00e676;
-      --text-main: #ffffff;
-      --text-muted: #94a3b8;
+      --bg-color: #0d121f; /* Sehr dunkles Blau, wie im Bild */
+      --node-bg: #111a2e; /* Dunklerer Knoten-Hintergrund */
+      --node-border: #1e2d4a; /* Dezenter Rand */
+      --node-text: #ffffff; /* Weißer Text */
+      --cyan-active: #00f2fe; /* Cyan für aktive Verbindungen */
+      --cyan-glow-intense: rgba(0, 242, 254, 0.7); /* Intensiverer Glow */
+      --cyan-glow-subtle: rgba(0, 242, 254, 0.1);
       --focus-ring: #ffe600; /* High Contrast Fokus-Farbe */
     }
 
@@ -25,7 +25,7 @@
 
     body {
       background-color: var(--bg-color);
-      color: var(--text-main);
+      color: var(--node-text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -34,30 +34,17 @@
       overflow-x: hidden;
     }
 
-    /* Barrierefreiheits-Steuerung (Ansicht wechseln & Skip-Link) */
-    .a11y-nav {
+    /* Barrierefreiheits-Skip-Link */
+    .skip-link {
       position: absolute;
-      top: 15px;
-      left: 15px;
-      z-index: 200;
-      display: flex;
-      gap: 10px;
+      top: -40px;
+      left: 0;
+      background: var(--cyan-active);
+      color: #000;
+      padding: 8px;
+      z-index: 100;
     }
-
-    .a11y-btn {
-      background: var(--node-bg);
-      color: var(--text-main);
-      border: 1px solid var(--node-border);
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .a11y-btn:focus, .node:focus, .close-btn:focus {
-      outline: 3px solid var(--focus-ring);
-      outline-offset: 3px;
-    }
+    .skip-link:focus { top: 0; }
 
     /* SVG Canvas für Verbindungslinien */
     #svg-canvas {
@@ -72,9 +59,15 @@
 
     .line-path {
       fill: none;
+      stroke: var(--cyan-active);
       stroke-width: 2.5;
       stroke-linecap: round;
-      transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0; /* Standardmäßig unsichtbar */
+      transition: opacity 0.4s ease, stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .line-path.active {
+        opacity: 1;
     }
 
     /* Mind-Map Container */
@@ -88,259 +81,20 @@
       z-index: 2;
     }
 
-    /* Pulsierendes Zentrum / Logo */
+    /* Pulsierendes Zentrum: Logo & Text */
     .center-node {
       position: absolute;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      user-select: none;
       z-index: 10;
     }
 
-    .logo-wrapper {
+    /* WICHTIG: Struktur für Logo und Pulsier-Effekt */
+    .center-visuals {
       position: relative;
-      width: 140px;
+      width: 140px; /* Durchmesser des Logos/Kreises */
       height: 140px;
-      border-radius: 50%;
-      background: #0d1627;
+      margin-bottom: 20px; /* Abstand zum Text darunter */
       display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
-      animation: pulse 3s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 25px rgba(0, 242, 254, 0.25); }
-      50% { box-shadow: 0 0 45px rgba(0, 242, 254, 0.5); }
-    }
-
-    /* WICHTIG: Animationen & Pulsieren abschalten bei reduzierter Bewegung */
-    @media (prefers-reduced-motion: reduce) {
-      .logo-wrapper {
-        animation: none !important;
-      }
-      .line-path, .node, .subnode, .modal {
-        transition: none !important;
-      }
-    }
-
-    .logo-img {
-      width: 85px;
-      height: 85px;
-      object-fit: contain;
-    }
-
-    .brand-title {
-      margin-top: 15px;
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: #ffffff;
-      text-transform: uppercase;
-    }
-
-    .brand-subtitle {
-      margin-top: 4px;
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 400;
-    }
-
-    /* Mind-Map Knotenpunkte */
-    .node {
-      position: absolute;
-      background: var(--node-bg);
-      border: 1px solid var(--node-border);
-      color: var(--text-main);
-      padding: 10px 22px;
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      user-select: none;
-      z-index: 5;
-    }
-
-    .node:hover {
-      border-color: var(--cyan-glow);
-    }
-
-    .subnode {
-      font-size: 13px;
-      padding: 8px 18px;
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.8);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .subnode.visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: scale(1);
-    }
-
-    /* Alternativansicht (Lineare Liste für Screenreader / Barrierefreiheit) */
-    .accessible-list {
-      display: none;
-      max-width: 800px;
-      width: 90%;
-      margin: 80px auto 40px auto;
-      z-index: 10;
-    }
-
-    .accessible-list h1 { margin-bottom: 20px; font-size: 28px; }
-    .accessible-list ul { list-style: none; padding: 0; }
-    .accessible-list li { 
-      background: var(--node-bg); 
-      margin-bottom: 12px; 
-      padding: 16px; 
-      border-radius: 8px; 
-      border: 1px solid var(--node-border);
-    }
-    .accessible-list h2 { color: var(--cyan-glow); font-size: 18px; margin-bottom: 6px; }
-
-    /* Modal Dialog */
-    .modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #111a2e;
-      border: 1px solid var(--cyan-glow);
-      border-radius: 12px;
-      padding: 24px;
-      max-width: 450px;
-      width: 90%;
-      z-index: 100;
-      display: none;
-    }
-
-    .modal.open { display: block; }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .modal-title { font-size: 18px; font-weight: 700; color: var(--cyan-glow); }
-    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
-  </style>
-</head>
-<body>
-
-  <!-- Barrierefreie Steuerungsleiste -->
-  <nav class="a11y-nav" aria-label="Barrierefreiheit">
-    <button class="a11y-btn" id="toggle-view-btn" aria-expanded="false">
-      Reine Textansicht aktivieren
-    </button>
-  </nav>
-
-  <!-- SVG Overlay -->
-  <svg id="svg-canvas" aria-hidden="true"></svg>
-
-  <!-- Mind-Map Ansicht -->
-  <main class="mindmap-container" id="mindmap-view" aria-label="Interaktive Mind-Map Navigation">
-    
-    <div class="center-node" id="center-node" tabindex="0" role="button" aria-label="Coruneva Hauptzentrum">
-      <div class="logo-wrapper">
-        <img class="logo-img" src="Logo_Coruneva_Nocobase.png" alt="CORUNEVA Logo">
-      </div>
-      <h1 class="brand-title">CORUNEVA</h1>
-      <p class="brand-subtitle">Klicke und erfahre mehr</p>
-    </div>
-
-    <!-- Hauptknoten mit aria-attributes -->
-    <div class="node" id="node-uber-uns" style="top: 25%; left: 30%;" tabindex="0" role="button" aria-expanded="false">Über uns</div>
-    <div class="node" id="node-produkt" style="top: 25%; left: 70%;" tabindex="0" role="button">Produkt</div>
-    <div class="node" id="node-faq" style="top: 50%; left: 80%;" tabindex="0" role="button">FAQ</div>
-    <div class="node" id="node-kontakt" style="top: 75%; left: 70%;" tabindex="0" role="button" aria-expanded="false">Kontakt</div>
-    <div class="node" id="node-preise" style="top: 75%; left: 30%;" tabindex="0" role="button">Preise</div>
-
-    <!-- Unterknoten -->
-    <div class="node subnode" id="node-vision" style="top: 15%; left: 20%;" tabindex="0" role="button">Vision</div>
-    <div class="node subnode" id="node-mission" style="top: 35%; left: 15%;" tabindex="0" role="button">Mission</div>
-    <div class="node subnode" id="node-impressum" style="top: 85%; left: 60%;" tabindex="0" role="button">Impressum</div>
-    <div class="node subnode" id="node-kontaktformular" style="top: 85%; left: 80%;" tabindex="0" role="button">Kontaktformular</div>
-
-  </main>
-
-  <!-- Barrierefreie Listenansicht (Standardmäßig ausgeblendet, per Klick aktivierbar) -->
-  <section class="accessible-list" id="accessible-list-view" aria-label="Textbasierte Inhaltsübersicht">
-    <h1>CORUNEVA – Inhaltsübersicht</h1>
-    <ul>
-      <li>
-        <h2>Unsere Vision</h2>
-        <p>Unternehmen ein lernendes Organisationsgedächtnis zu geben, das Strategie, Führung und Mitarbeiterbedürfnisse nahtlos vereint.</p>
-      </li>
-      <li>
-        <h2>Unsere Mission</h2>
-        <p>Wir befähigen Organisationen durch einen strukturierten 3-Schritte-Konsensprozess, echte Klarheit zu schaffen.</p>
-      </li>
-      <li>
-        <h2>Produkt</h2>
-        <p>Erfahre mehr über die 3 Ebenen von Coruneva: Befragungen, Teammatching und strategische Unternehmensanalyse.</p>
-      </li>
-      <li>
-        <h2>Preise</h2>
-        <p>Flexibel auf Ihre Unternehmensgröße angepasst. Kontaktieren Sie uns für ein Angebot.</p>
-      </li>
-      <li>
-        <h2>Kontakt & Impressum</h2>
-        <p>Nehmen Sie direkt mit uns Kontakt auf oder lesen Sie das Impressum.</p>
-      </li>
-    </ul>
-  </section>
-
-  <!-- Modal Dialog -->
-  <div class="modal" id="info-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-header">
-      <h2 class="modal-title" id="modal-title">Titel</h2>
-      <button class="close-btn" id="modal-close" aria-label="Fenster schließen">&times;</button>
-    </div>
-    <div class="modal-body" id="modal-body">Inhalt...</div>
-  </div>
-
-  <script>
-    const toggleViewBtn = document.getElementById('toggle-view-btn');
-    const mindmapView = document.getElementById('mindmap-view');
-    const listView = document.getElementById('accessible-list-view');
-    const svgCanvas = document.getElementById('svg-canvas');
-
-    // Barrierefreie Ansicht umschalten
-    toggleViewBtn.addEventListener('click', () => {
-      const isList = listView.style.display === 'block';
-      if (isList) {
-        listView.style.display = 'none';
-        mindmapView.style.display = 'flex';
-        svgCanvas.style.display = 'block';
-        toggleViewBtn.innerText = 'Reine Textansicht aktivieren';
-        toggleViewBtn.setAttribute('aria-expanded', 'false');
-      } else {
-        listView.style.display = 'block';
-        mindmapView.style.display = 'none';
-        svgCanvas.style.display = 'none';
-        toggleViewBtn.innerText = 'Interaktive Mind-Map aktivieren';
-        toggleViewBtn.setAttribute('aria-expanded', 'true');
-      }
-    });
-
-    // Tastatur-Bedienung unterstützen (Enter / Space auf Knoten)
-    document.querySelectorAll('.node').forEach(node => {
-      node.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          node.click();
-        }
-      });
-    });
-  </script>
-
-</body>
-</html>
